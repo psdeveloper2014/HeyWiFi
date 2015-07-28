@@ -16,9 +16,156 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white" >
 
+    <!-- Button Area -->
+    <LinearLayout
+        android:id="@+id/button_ly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="28dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/change_info_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="나의 휴대폰 정보 수정"
+            android:theme="@style/ButtonColorNormal" />
+
+        <Button
+            android:id="@+id/find_others_device_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다른 사람의 휴대폰 찾아주기"
+            android:theme="@style/ButtonColorCyan" />
+
+        <Button
+            android:id="@+id/find_my_device_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="나의 잃어버린 휴대폰 찾기"
+            android:theme="@style/ButtonColorTeal" />
+
+    </LinearLayout>
+
+    <!-- Shows when user logined -->
+    <RelativeLayout
+        android:id="@+id/on_logined_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_ly" >
+
+        <!-- Text Area -->
+        <LinearLayout
+            android:id="@+id/text_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/my_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="제 이름은 LG-F430L입니다."
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="저를 찾을 때,"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. 다른 휴대폰에 이 앱을 설치하고 찾거나,"
+                android:textSize="16sp"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2. heywifi.net에서 휴대폰을 찾아주세요."
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- Ripple Animation -->
+        <com.skyfishjy.library.RippleBackground
+            android:id="@+id/ripple"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/text_ly"
+            app:rb_color="#009688"
+            app:rb_radius="32dp"
+            app:rb_rippleAmount="3" >
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_check_circle_ripple_48dp"
+                android:layout_centerInParent="true" />
+
+        </com.skyfishjy.library.RippleBackground>
+
+    </RelativeLayout>
+
+    <!-- Shows when user not logined -->
+    <RelativeLayout
+        android:id="@+id/on_notlogined_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_ly" >
+
+        <!-- Text Area (Space for Ripple) -->
+        <LinearLayout
+            android:id="@+id/n_text_ly"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" />
+
+        <!-- Ripple Animation -->
+        <com.skyfishjy.library.RippleBackground
+            android:id="@+id/n_ripple"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/n_text_ly"
+            app:rb_color="#9E9E9E"
+            app:rb_radius="32dp"
+            app:rb_rippleAmount="3" >
+
+            <ImageView
+                android:id="@+id/n_ripple_iv"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_add_circle_ripple_grey_48dp"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="휴대폰을 등록하세요."
+                android:textSize="20sp"
+                android:layout_below="@id/n_ripple_iv"
+                android:layout_marginTop="18dp"
+                android:layout_centerHorizontal="true" />
+
+        </com.skyfishjy.library.RippleBackground>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -17,8 +17,39 @@
 <resources>
     <string name="app_name">HeyWiFi</string>
 
-    <string name="action_settings">Settings</string>
+    <!-- MainActivity -->
+    <string name="action_notlogined">로그인이 필요합니다.</string>
+    <string name="action_nim">님 반갑습니다.</string>
 
+    <!-- Tab1Activity -->
     <string name="tab1_title">휴대폰 찾기</string>
+    <string name="my_name_header">제 이름은&#160;</string>
+    <string name="my_name_footer">입니다.</string>
+
+    <!-- Tab2Activity -->
     <string name="tab2_title">공공장소 에티켓</string>
+
+    <!-- LoginActivity -->
+    <string name="id">아이디</string>
+    <string name="pw">비밀번호</string>
+    <string name="pw_re">비밀번호 확인</string>
+    <string name="email">이메일</string>
+
+    <!-- SignupActivity -->
+    <string name="signup_label">회원가입</string>
+    <string name="too_short">길이가 짧습니다.</string>
+    <string name="too_long">길이가 깁니다.</string>
+    <string name="id_duplicated">이미 등록된 아이디입니다.</string>
+    <string name="email_duplicated">이미 등록된 이메일입니다.</string>
+    <string name="pw_re_incorrect">비밀번호가 일치하지 않습니다.</string>
+    <string name="email_incorrect">이메일 주소를 다시 확인해주세요.</string>
+
+    <!-- SigninActivity -->
+    <string name="signin_label">로그인</string>
+    <string name="id_notexist">일치하는 아이디가 없습니다.</string>
+    <string name="pw_notexist">일치하는 비밀번호가 없습니다.</string>
+
+    <!-- LoadingDialog -->
+    <string name="wait">잠시만 기다려주세요</string>
+
 </resources>

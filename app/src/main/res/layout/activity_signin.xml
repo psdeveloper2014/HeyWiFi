@@ -1,0 +1,83 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <!-- Main Part -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_centerInParent="true" >
+
+        <TextView
+            android:id="@+id/id_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/id"
+            android:textSize="14sp"
+            android:layout_marginLeft="4dp" />
+
+        <TextView
+            android:id="@+id/id_err_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_alignTop="@id/id_tv"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/id_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:lines="1"
+            android:maxLines="1"
+            android:maxLength="45"
+            android:layout_below="@id/id_tv" />
+
+        <TextView
+            android:id="@+id/pw_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pw"
+            android:textSize="14sp"
+            android:layout_below="@id/id_et"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/pw_err_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_alignTop="@id/pw_tv"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/pw_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:password="true"
+            android:lines="1"
+            android:maxLines="1"
+            android:maxLength="45"
+            android:layout_below="@id/pw_tv" />
+
+        <Button
+            android:id="@+id/signin_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signin_label"
+            android:theme="@style/ButtonColorTeal"
+            android:layout_below="@id/pw_et"
+            android:layout_marginTop="24dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
