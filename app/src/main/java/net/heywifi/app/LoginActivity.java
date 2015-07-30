@@ -48,11 +48,5 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        DBManager dm = new DBManager(this, "data", null, 1);
-        String[] data = dm.selectUserinfo();
-
-        TextView text = (TextView) findViewById(R.id.text);
-        text.setText(data[0] + ":" + data[1] + ":" + data[2] + ":" + data[3]);
     }
 }

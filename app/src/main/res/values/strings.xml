@@ -18,13 +18,33 @@
     <string name="app_name">HeyWiFi</string>
 
     <!-- MainActivity -->
-    <string name="action_notlogined">로그인이 필요합니다.</string>
+    <string name="action_notlogined">로그인</string>
     <string name="action_nim">님 반갑습니다.</string>
 
     <!-- Tab1Activity -->
     <string name="tab1_title">휴대폰 찾기</string>
     <string name="my_name_header">제 이름은&#160;</string>
     <string name="my_name_footer">입니다.</string>
+    <string name="change_info_btn">나의 휴대폰 정보 수정</string>
+    <string name="find_others_device_btn">다른 사람의 휴대폰 찾아주기</string>
+    <string name="find_my_device_btn">나의 잃어버린 휴대폰 찾기</string>
+    <string name="my_name_guide01">저를 찾을 때,</string>
+    <string name="my_name_guide02">1. 다른 휴대폰에 이 앱을 설치하고 찾거나,</string>
+    <string name="my_name_guide03">2. heywifi.net에서 휴대폰을 찾아주세요.</string>
+    <string name="n_ripple_tv01">휴대폰을 등록하세요.</string>
+    <string name="n_ripple_tv02">나중에 이 휴대폰을 찾을 수 있게 됩니다.</string>
+    <string name="not_logined">로그인이 필요합니다.</string>
+
+    <!-- RegisterPhoneActivity -->
+    <string name="registerphone_label">휴대폰 등록</string>
+    <string name="register_guide">이름만 정해주시면 됩니다.</string>
+    <string name="register_name">휴대폰 이름</string>
+    <string name="register_err_toolong">이름이 너무 깁니다.</string>
+    <string name="register_err_already">이미 등록된 이름입니다.</string>
+    <string name="register_phone_ex">예) 갤럭시 S6</string>
+    <string name="register_collecting">HeyWiFi에서 수집하는 항목\n(휴대폰을 찾을 때만 사용됩니다)</string>
+    <string name="register_mac">기기의 MAC 주소</string>
+    <string name="register_btn">등록하기</string>
 
     <!-- Tab2Activity -->
     <string name="tab2_title">공공장소 에티켓</string>
@@ -42,7 +62,7 @@
     <string name="id_duplicated">이미 등록된 아이디입니다.</string>
     <string name="email_duplicated">이미 등록된 이메일입니다.</string>
     <string name="pw_re_incorrect">비밀번호가 일치하지 않습니다.</string>
-    <string name="email_incorrect">이메일 주소를 다시 확인해주세요.</string>
+    <string name="email_incorrect">올바른 이메일 형식이 아닙니다.</string>
 
     <!-- SigninActivity -->
     <string name="signin_label">로그인</string>

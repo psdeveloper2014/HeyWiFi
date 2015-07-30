@@ -3,7 +3,7 @@
     package="net.heywifi.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Tab1Activity - MAC Address -->
+    <!-- Tab1Activity, RegisterPhoneActivity - MAC Address -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
@@ -26,6 +26,14 @@
             </intent-filter>
         </activity>
 
+        <!-- RegisterPhoneActivity -->
+        <activity
+            android:name=".RegisterPhoneActivity"
+            android:label="@string/registerphone_label"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+
         <!-- LoginActivity -->
         <activity
             android:name=".LoginActivity"
@@ -35,16 +43,16 @@
         <!-- SignupActivity -->
         <activity
             android:name=".SignupActivity"
-            android:parentActivityName=".LoginActivity"
             android:label="@string/signup_label"
+            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 
         <!-- SigninActivity -->
         <activity
             android:name=".SigninActivity"
-            android:parentActivityName=".LoginActivity"
             android:label="@string/signin_label"
+            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 

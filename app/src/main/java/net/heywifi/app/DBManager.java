@@ -38,13 +38,12 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        query = "CREATE TABLE " + TB_USERINFO + " (" +
-                "id TEXT, pw TEXT);";
+        query = "CREATE TABLE " + TB_USERINFO + " (id TEXT, pw TEXT);";
         db.execSQL(query);
 
         query = "CREATE TABLE " + TB_PHONEINFO + " (" +
-                "mac1 TEXT, nick1 TEXT, mac2 TEXT, nick2 TEXT, mac3 TEXT, nick3 TEXT, " +
-                "mac4 TEXT, nick4 TEXT, mac5 TEXT, nick5 TEXT);";
+                "id TEXT, pos INT, mac1 TEXT, nick1 TEXT, mac2 TEXT, nick2 TEXT, " +
+                "mac3 TEXT, nick3 TEXT, mac4 TEXT, nick4 TEXT, mac5 TEXT, nick5 TEXT);";
         db.execSQL(query);
     }
 
@@ -77,6 +76,8 @@ public class DBManager extends SQLiteOpenHelper {
             }
         }
 
+        csr.close();
+
         return data;
     }
 
@@ -99,32 +100,35 @@ public class DBManager extends SQLiteOpenHelper {
             logined = false;
         }
 
+        csr.close();
+
         return logined;
     }
 
-    public void insertPhoneInfo(String[] mac, String[] nick) {
-        query = "INSERT INTO " + TB_PHONEINFO + " VALUES(";
+    public void insertPhoneInfo(String id, int pos, String[] mac, String[] nick) {
+        query = "INSERT INTO " + TB_PHONEINFO + " VALUES("
+                + "'" + id + "', " + pos + ", ";
         for (int i=0; i<5; i++) {
             if (i != 4) {
-                query += mac[i] + ", " + nick[i] + ", ";
+                query += "'" + mac[i] + "', '" + nick[i] + "', ";
             } else {
-                query += mac[i] + ", " + nick[i] + ");";
+                query += "'" + mac[i] + "', '" + nick[i] + "');";
             }
         }
         db.execSQL(query);
     }
 
-    public String[] selectPhoneInfo() {
+    public String[] selectPhoneInfo(String id) {
         Cursor csr;
         String[] data = new String[10];
 
-        query = "SELECT * FROM " + TB_PHONEINFO + ";";
+        query = "SELECT * FROM " + TB_PHONEINFO + " WHERE id='" + id + "';";
         csr = db.rawQuery(query, null);
         csr.moveToFirst();
 
         try {
             for (int i=0; i<10; i++) {
-                data[i] = csr.getString(i);
+                data[i] = csr.getString(i+2);
             }
         } catch (CursorIndexOutOfBoundsException e) {
             // If there's nothing in cursor
@@ -133,23 +137,41 @@ public class DBManager extends SQLiteOpenHelper {
             }
         }
 
+        csr.close();
+
         return data;
+    }
+
+    public void updatePhoneInfo(String id, int pos, String[] mac, String[] nick) {
+        query = "UPDATE " + TB_PHONEINFO + " SET pos=" + pos + ", ";
+        for (int i=0; i<5; i++) {
+            if (i != 4) {
+                query += "mac" + i+1 + "='" + mac[i] + "', nick" + i+1 + "='" + nick[i] + "', ";
+            } else {
+                query += "mac" + i+1 + "='" + mac[i] + "', nick" + i+1 + "='" + nick[i] + "' ";
+            }
+        }
+        query += "WHERE id='" + id + "';";
+
+        db.execSQL(query);
     }
 
     public boolean anythingInPhoneInfo() {
         Cursor csr;
         boolean inthere;
 
-        query = "SELECT mac1 FROM " + TB_PHONEINFO + ";";
+        query = "SELECT * FROM " + TB_PHONEINFO + ";";
         csr = db.rawQuery(query, null);
         csr.moveToFirst();
 
         try {
             if (!csr.getString(0).isEmpty()) inthere = true;
             else inthere = false;
-        } catch (CursorIndexOutOfBoundsException e) {
+        } catch (Exception e) {
             inthere = false;
         }
+
+        csr.close();
 
         return inthere;
     }
