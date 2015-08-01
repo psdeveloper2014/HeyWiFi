@@ -3,14 +3,51 @@
     package="net.heywifi.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Tab1Activity, RegisterPhoneActivity - MAC Address -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- GCM -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission android:name="net.heywifi.app.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="net.heywifi.app.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!-- GCM Receiver -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="net.heywifi.app" />
+            </intent-filter>
+        </receiver>
+
+        <!-- GCM Listener Service -->
+        <service
+            android:name=".MyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <!-- InstanceID Listener Service -->
+        <service
+            android:name="net.heywifi.app.MyInstanceIDListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
 
         <!-- MainActivity -->
         <activity
@@ -53,6 +90,22 @@
             android:name=".SigninActivity"
             android:label="@string/signin_label"
             android:parentActivityName=".LoginActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+
+        <!-- FindMyPhoneS01 -->
+        <activity
+            android:name=".FindMyPhoneS01"
+            android:label="@string/findmyphone_label"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+
+        <!-- FindMyPhoneS02 -->
+        <activity
+            android:name=".FindMyPhoneS02"
+            android:label="@string/findmyphone_label"
+            android:parentActivityName=".FindMyPhoneS01"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 
