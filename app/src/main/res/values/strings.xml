@@ -72,7 +72,8 @@
     <!-- LoadingDialog -->
     <string name="wait">잠시만 기다려주세요</string>
 
-    <!-- FindMyPhoneS01 -->
-    <string name="findmyphone_label">휴대폰 찾기</string>
+    <!-- FindPhoneActivity -->
+    <string name="findphone_label">휴대폰 찾기</string>
+    <string name="findphone_guide">찾을 휴대폰을 선택하세요.</string>
 
 </resources>

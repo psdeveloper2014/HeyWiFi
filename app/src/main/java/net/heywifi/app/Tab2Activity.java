@@ -16,7 +16,9 @@
 
 package net.heywifi.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,13 +28,92 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+
+import java.io.IOException;
+
 
 public class Tab2Activity extends Fragment {
+
+    Context context;
+
+    Button regist_btn, unregist_btn;
+    TextView text_tv;
+
+    String rid;
+    String senderId = "648637692734";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_tab2, container, false);
+        context = v.getContext();
+
+        regist_btn = (Button) v.findViewById(R.id.regist_btn);
+        unregist_btn = (Button) v.findViewById(R.id.unregist_btn);
+        text_tv = (TextView) v.findViewById(R.id.text_tv);
+
+        regist_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                regist();
+            }
+        });
+
+        unregist_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unregist();
+            }
+        });
+
         return v;
+    }
+
+    private void regist() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void ... params) {
+                String msg = "";
+                try {
+                    InstanceID instanceID = InstanceID.getInstance(context);
+                    rid = instanceID.getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    msg = "Device registered, registration ID=" + rid;
+
+                    /*
+                    registerToServer();
+                    storeRegistrationId(context, regId);
+                    */
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return msg;
+            }
+        }.execute();
+    }
+
+    private void unregist() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void ... params) {
+                String msg = "";
+                try {
+                    InstanceID instanceID = InstanceID.getInstance(context);
+                    instanceID.deleteInstanceID();
+                    msg = "Device unregistered.";
+
+                    /*
+                    unregisterToServer();
+                    deleteRegistrationId(context, regId);
+                    */
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return msg;
+            }
+        }.execute();
     }
 }
 
