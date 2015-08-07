@@ -48,6 +48,7 @@ public class Tab1Activity extends Fragment {
     RippleBackground ripple, n_ripple;
 
     String id;
+    String pw;
     String[] mac = new String[5];
     String[] nick = new String[5];
 
@@ -92,7 +93,11 @@ public class Tab1Activity extends Fragment {
         find_my_device_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                loadUserInfo();
+                Intent intent = new Intent(v.getContext(), FindPhoneActivity.class);
+                intent.putExtra("id", id);
+                intent.putExtra("pw", pw);
+                startActivity(intent);
             }
         });
 
@@ -176,6 +181,7 @@ public class Tab1Activity extends Fragment {
     private void loadUserInfo() {
         String data[] = dm.selectUserinfo();
         id = data[0];
+        pw = data[1];
     }
 
     private boolean isMyPhoneRegistered() {

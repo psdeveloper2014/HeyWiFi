@@ -277,8 +277,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         private void finishActivity() {
-            Intent intent = getIntent();
-            intent.putExtra("result", 0);
+            setResult(0);
             finish();
         }
     }

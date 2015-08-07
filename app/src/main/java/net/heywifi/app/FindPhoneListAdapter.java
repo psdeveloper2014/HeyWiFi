@@ -87,19 +87,13 @@ public class FindPhoneListAdapter extends BaseAdapter {
 class FindPhoneListItem {
 
     String nick;
-    boolean selected;
 
-    public FindPhoneListItem(String nick, boolean selected) {
+    public FindPhoneListItem(String nick) {
         this.nick = nick;
-        this.selected = selected;
     }
 
     public String getNick() {
         return nick;
-    }
-
-    public boolean getSelected() {
-        return selected;
     }
 }
 

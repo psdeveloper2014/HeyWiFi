@@ -75,5 +75,8 @@
     <!-- FindPhoneActivity -->
     <string name="findphone_label">휴대폰 찾기</string>
     <string name="findphone_guide">찾을 휴대폰을 선택하세요.</string>
+    <string name="do_ringing">벨소리 울리기</string>
+    <string name="do_vibrating">진동 시키기</string>
+    <string name="find">찾기</string>
 
 </resources>

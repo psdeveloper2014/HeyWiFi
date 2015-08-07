@@ -16,19 +16,22 @@
 
 package net.heywifi.app;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,13 +61,13 @@ public class FindPhoneActivity extends AppCompatActivity {
     DBManager dm;
     static int DATABASE_VERSION = 1;
 
-    TextView ring_tv, vibrate_tv;
+    LinearLayout find_ly;
     CheckBox ring_cb, vibrate_cb;
     Button findphone_btn;
     ListView lv;
     FindPhoneListAdapter adapter;
 
-    boolean ringChecked, vibrateChecked;
+    boolean ringChecked = true, vibrateChecked = true;
 
     String id, pw;
     String[] mac = new String[5];
@@ -81,12 +84,15 @@ public class FindPhoneActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        WarningDialog dialog = new WarningDialog(FindPhoneActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.show();
+
         Intent getIntent = getIntent();
         id = getIntent.getExtras().getString("id");
         pw = getIntent.getExtras().getString("pw");
 
-        ring_tv = (TextView) findViewById(R.id.findphone_ring_tv);
-        vibrate_tv = (TextView) findViewById(R.id.findphone_vibrate_tv);
+        find_ly = (LinearLayout) findViewById(R.id.findphone_find_ly);
         ring_cb = (CheckBox) findViewById(R.id.findphone_ring_cb);
         vibrate_cb = (CheckBox) findViewById(R.id.findphone_vibrate_cb);
         findphone_btn = (Button) findViewById(R.id.findphone_btn);
@@ -95,58 +101,30 @@ public class FindPhoneActivity extends AppCompatActivity {
 
         dm = new DBManager(getApplicationContext(), "data", null, DATABASE_VERSION);
 
-        disableActions();
         fillListView();
-    }
 
-    private void disableActions() {
-        ring_tv.setTextColor(getResources().getColor(R.color.gray));
-        vibrate_tv.setTextColor(getResources().getColor(R.color.gray));
-        ring_cb.setChecked(false);
-        vibrate_cb.setChecked(false);
-        ringChecked = false;
-        vibrateChecked = false;
-        ring_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ring_cb.setChecked(false);
-                Toast.makeText(getApplicationContext(), "휴대폰을 선택하세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-        vibrate_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                vibrate_cb.setChecked(false);
-                Toast.makeText(getApplicationContext(), "휴대폰을 선택하세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-        findphone_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "휴대폰을 선택하세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void enableActions() {
-        ring_tv.setTextColor(getResources().getColor(R.color.black));
-        vibrate_tv.setTextColor(getResources().getColor(R.color.black));
         ring_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ringChecked = isChecked;
             }
         });
+
         vibrate_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 vibrateChecked = isChecked;
             }
         });
+
         findphone_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: give data to FindingPhoneActivity
+                Intent intent = new Intent(FindPhoneActivity.this, FindingPhoneActivity.class);
+                intent.putExtra("id", id);
+                intent.putExtra("pw", pw);
+                intent.putExtra("mac", mac[selectedpos]);
+                intent.putExtra("nick", nick[selectedpos]);
             }
         });
     }
@@ -154,39 +132,23 @@ public class FindPhoneActivity extends AppCompatActivity {
     private void fillListView() {
         new GetPhoneListTask().execute();
 
-        adapter.clearItem();
-        for (int i=0; i<5; i++) {
-            if (!nick[i].equals("")) {
-                adapter.addItem(new FindPhoneListItem(nick[i], false));
-            } else {
-                break;
-            }
-        }
-        lv.setAdapter(adapter);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-            }
-        });
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Make visible bottom find button
+                find_ly.setVisibility(View.VISIBLE);
+
                 // If it's first time highlighting,
                 if (selectedpos == -1) {
-                    // Just highlight
                     highlightItem(view);
                 }
-                // But there's higlighted item,
+                // There's already higlighted item,
                 else {
                     disableHighlightedItem();
                     highlightItem(view);
                 }
 
-                // Bottom buttons
-                enableActions();
+                selectedpos = position;
             }
         });
     }
@@ -204,16 +166,35 @@ public class FindPhoneActivity extends AppCompatActivity {
         item_iv.setVisibility(View.INVISIBLE);
     }
 
-    private class GetPhoneListTask extends AsyncTask<Void, Void, Void> {
+    private class GetPhoneListTask extends AsyncTask<Void, Void, Integer> {
 
         String response;
 
         @Override
-        protected Void doInBackground(Void ... params) {
+        protected Integer doInBackground(Void ... params) {
             downloadPhoneList();
             decodePhoneJson();
 
-            return null;
+            return 0;
+        }
+
+        protected void onPostExecute(Integer result) {
+            adapter.clearItem();
+            for (int i=0; i<5; i++) {
+                if (!nick[i].equals("") && nick[i] != null && !nick[i].equals("null")) {
+                    adapter.addItem(new FindPhoneListItem(nick[i]));
+                } else {
+                    break;
+                }
+            }
+            lv.setAdapter(adapter);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
         }
 
         private void downloadPhoneList() {
@@ -303,5 +284,26 @@ public class FindPhoneActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+}
+
+class WarningDialog extends Dialog {
+
+    public WarningDialog(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_findphone);
+
+        Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 }

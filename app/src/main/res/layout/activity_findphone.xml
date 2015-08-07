@@ -42,7 +42,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="28dp"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:visibility="visible" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +62,7 @@
                     android:id="@+id/findphone_ring_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="벨소리 울리기"
+                    android:text="@string/do_ringing"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:layout_centerVertical="true" />
@@ -70,7 +71,8 @@
                     android:id="@+id/findphone_ring_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:checked="true" />
 
             </RelativeLayout>
 
@@ -85,7 +87,7 @@
                     android:id="@+id/findphone_vibrate_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="진동 시키기"
+                    android:text="@string/do_vibrating"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:layout_centerVertical="true" />
@@ -94,7 +96,8 @@
                     android:id="@+id/findphone_vibrate_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:checked="true" />
 
             </RelativeLayout>
 
@@ -104,7 +107,7 @@
             android:id="@+id/findphone_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="찾기"
+            android:text="@string/find"
             android:theme="@style/ButtonColorTeal" />
 
     </LinearLayout>
