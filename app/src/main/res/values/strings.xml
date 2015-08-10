@@ -17,18 +17,20 @@
 <resources>
     <string name="app_name">HeyWiFi</string>
 
+    <string name="action_close">닫기</string>
+
     <!-- MainActivity -->
     <string name="action_notlogined">로그인</string>
-    <string name="action_nim">님 반갑습니다.</string>
+    <string name="action_nim">님</string>
 
     <!-- Tab1Activity -->
     <string name="tab1_title">휴대폰 찾기</string>
     <string name="my_name_header">제 이름은&#160;</string>
-    <string name="my_name_footer">입니다.</string>
+    <string name="my_name_footer">&#160;입니다.</string>
     <string name="change_info_btn">나의 휴대폰 정보 수정</string>
     <string name="find_others_device_btn">다른 사람의 휴대폰 찾아주기</string>
     <string name="find_my_device_btn">나의 잃어버린 휴대폰 찾기</string>
-    <string name="my_name_guide01">저를 찾을 때,</string>
+    <string name="my_name_guide01">이 휴대폰을 찾으시려면,</string>
     <string name="my_name_guide02">1. 다른 휴대폰에 이 앱을 설치하고 찾거나,</string>
     <string name="my_name_guide03">2. heywifi.net에서 휴대폰을 찾아주세요.</string>
     <string name="n_ripple_tv01">휴대폰을 등록하세요.</string>
@@ -39,6 +41,7 @@
     <string name="registerphone_label">휴대폰 등록</string>
     <string name="register_guide">이름만 정해주시면 됩니다.</string>
     <string name="register_name">휴대폰 이름</string>
+    <string name="register_err_empty">이름을 정해주세요.</string>
     <string name="register_err_toolong">이름이 너무 깁니다.</string>
     <string name="register_err_already">이미 등록된 이름입니다.</string>
     <string name="register_phone_ex">예) 갤럭시 S6</string>
@@ -75,8 +78,20 @@
     <!-- FindPhoneActivity -->
     <string name="findphone_label">휴대폰 찾기</string>
     <string name="findphone_guide">찾을 휴대폰을 선택하세요.</string>
+    <string name="findphone_guide_nointernet">인터넷 연결을 확인해보세요.</string>
+    <string name="findphone_guide_getting">목록을 가져오는 중입니다...</string>
     <string name="do_ringing">벨소리 울리기</string>
     <string name="do_vibrating">진동 시키기</string>
     <string name="find">찾기</string>
+    <string name="findphone_dialog_title">휴대폰 찾기 기능의 한계</string>
+    <string name="findphone_dialog_text">비행기 모드이거나 전원이 꺼져있는 휴대폰은 찾을 수 없으며, 그러한 경우가 아니더라도 찾아내지 못할 수도 있습니다.\n\n하지만 찾아내지 못하는 경우는 드물며, 이 앱이 찾아내지 못한다 하더라도 마음을 가다듬고 기억을 되돌려가며 찾으면 찾으실 수 있을겁니다.</string>
 
+    <!-- FindingPhoneActivityS01 -->
+    <string name="finding01_label">휴대폰 찾기 (1/3)</string>
+    <string name="finding01_found_btn">찾았습니다</string>
+    <string name="finding01_giveup_btn">포기하기</string>
+    <string name="finding01_nextstep_btn">다음 단계로</string>
+    <string name="finding01_send">신호를 보냈습니다.</string>
+    <string name="finding01_found_ask">찾았나요?</string>
+    <string name="finding01_guide">위의 원이 가득찰 때까지 기다려보세요.</string>
 </resources>

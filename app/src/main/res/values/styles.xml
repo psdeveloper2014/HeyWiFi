@@ -23,8 +23,12 @@
         <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
 
-    <!-- For MainActivity -->
-    <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar" >
+    <style name="IntroActivityStyle" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
+
+    <style name="MainActivityStyle" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>

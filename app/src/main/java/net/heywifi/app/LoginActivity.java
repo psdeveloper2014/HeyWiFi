@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == 0) {
+        if (resultCode == 1) {
             finish();
         }
     }

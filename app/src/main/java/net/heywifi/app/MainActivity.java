@@ -16,7 +16,6 @@
 
 package net.heywifi.app;
 
-import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -27,8 +26,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
-    DBManager dm;
-    static int DATABASE_VERSION = 1;
+    SharedPrefSettings pref;
 
     Toolbar toolbar;
     ViewPager vp;
@@ -36,6 +34,8 @@ public class MainActivity extends ActionBarActivity {
     SlidingTabLayout tabs;
     CharSequence titles[] = new CharSequence[2];
     int numtab = 2;
+
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +63,19 @@ public class MainActivity extends ActionBarActivity {
 
         tabs.setViewPager(vp);
 
-        dm = new DBManager(this, "data", null, DATABASE_VERSION);
-        // Launch login activity when no account registered
-        if (!dm.isUserLogined()) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        }
-        // Launch welcome activity when first launch
-        // TODO: make welcome activity
+        pref = new SharedPrefSettings(this);
+
+        finishIntroActivity();
+    }
+
+    private void finishIntroActivity() {
+        IntroActivity aIntro = new IntroActivity();
+        aIntro.aIntro.finish();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         setUserInfoMenuTitle(menu);
@@ -83,9 +84,11 @@ public class MainActivity extends ActionBarActivity {
 
     private void setUserInfoMenuTitle(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_user);
-        if (dm.isUserLogined()) {
-            String[] info = dm.selectUserinfo();
-            item.setTitle(info[0] + getResources().getText(R.string.action_nim));
+        if (pref.isUserLogined()) {
+            String[] data = pref.getUserInfo();
+            item.setTitle(data[0] + getResources().getText(R.string.action_nim));
+        } else {
+            item.setVisible(false);
         }
     }
 
@@ -97,7 +100,6 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_user) {
-            // TODO: show account info activity
             return true;
         }
 

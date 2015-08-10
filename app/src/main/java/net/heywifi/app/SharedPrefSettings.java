@@ -18,7 +18,7 @@ package net.heywifi.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
 
 public class SharedPrefSettings {
 
@@ -52,4 +52,62 @@ public class SharedPrefSettings {
         editor.commit();
     }
 
+    public String[] getPhoneInfo() {
+        String[] data = new String[2];
+        data[0] = pref.getString("mac", "");
+        data[1] = pref.getString("nick", "");
+
+        return data;
+    }
+
+    public void putPhoneInfo(String mac, String nick) {
+        editor.putString("mac", mac);
+        editor.putString("nick", nick);
+        editor.commit();
+    }
+
+    public boolean anythingPhoneInfo() {
+        String mac = pref.getString("mac", "");
+
+        if (mac.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public String[] getUserInfo() {
+        String[] data = new String[2];
+        data[0] = pref.getString("id", "");
+        data[1] = pref.getString("pw", "");
+
+        return data;
+    }
+
+    public void putUserInfo(String id, String pw) {
+        editor.putString("id", id);
+        editor.putString("pw", pw);
+        editor.commit();
+    }
+
+    public boolean isUserLogined() {
+        String id = pref.getString("id", "");
+
+        if (id.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isFirstLaunch() {
+        boolean boo = pref.getBoolean("firstlaunch", true);
+
+        if (boo) {
+            editor.putBoolean("firstlaunch", false);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -17,5 +17,8 @@
 <resources>
 
     <dimen name="padding">28dp</dimen>
+    <dimen name="padding_form">32dp</dimen>
+
+    <dimen name="padding_dialog_close">64dp</dimen>
 
 </resources>

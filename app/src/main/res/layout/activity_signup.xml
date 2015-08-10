@@ -18,15 +18,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="@color/white" >
 
     <!-- Main Part -->
     <RelativeLayout
         android:id="@+id/main_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginLeft="@dimen/padding"
+        android:layout_marginRight="@dimen/padding"
         android:layout_centerInParent="true" >
 
         <TextView
@@ -51,9 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:lines="1"
-            android:maxLines="1"
             android:maxLength="45"
+            android:singleLine="true"
             android:layout_below="@id/id_tv" />
 
         <TextView
@@ -81,9 +80,8 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:password="true"
-            android:lines="1"
-            android:maxLines="1"
             android:maxLength="45"
+            android:singleLine="true"
             android:layout_below="@id/pw_tv" />
 
         <TextView
@@ -110,10 +108,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:password="true"
-            android:lines="1"
-            android:maxLines="1"
+            android:inputType="textPassword"
             android:maxLength="45"
+            android:singleLine="true"
             android:layout_below="@id/pw_re_tv" />
 
         <TextView
@@ -140,9 +137,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:lines="1"
-            android:maxLines="1"
             android:maxLength="45"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionDone"
             android:layout_below="@id/email_tv" />
 
         <Button

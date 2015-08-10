@@ -24,12 +24,13 @@
         android:id="@+id/findphone_guide_rl"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginLeft="28dp" >
+        android:layout_marginLeft="@dimen/padding" >
 
         <TextView
+            android:id="@+id/findphone_guide_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/findphone_guide"
+            android:text="@string/findphone_guide_getting"
             android:textSize="14sp"
             android:textColor="@color/gray"
             android:layout_centerVertical="true" />
@@ -41,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="28dp"
+        android:layout_margin="@dimen/padding"
         android:layout_alignParentBottom="true"
         android:visibility="visible" >
 
@@ -116,6 +117,8 @@
         android:id="@+id/findphone_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/padding"
+        android:layout_marginRight="@dimen/padding"
         android:layout_above="@id/findphone_find_ly"
         android:layout_below="@id/findphone_guide_rl" />
 

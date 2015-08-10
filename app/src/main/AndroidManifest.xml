@@ -20,7 +20,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Tab1Activity, RegisterPhoneActivity - MAC Address -->
+    <!-- IntroActivity - Check network status -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- RegisterPhoneActivity - MAC address -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- GCM -->
@@ -47,19 +50,25 @@
         </receiver>
         <service android:name=".GcmIntentService" />
 
+        <!-- IntroActivity -->
+        <activity
+            android:name=".IntroActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/IntroActivityStyle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:theme="@style/NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/MainActivityStyle" />
 
         <!-- RegisterPhoneActivity -->
         <activity
@@ -99,10 +108,10 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 
-        <!-- FindingPhoneActivity -->
+        <!-- FindingPhoneActivityS01 -->
         <activity
-            android:name=".FindingPhoneActivity"
-            android:label=""
+            android:name=".FindingPhoneActivityS01"
+            android:label="@string/finding01_label"
             android:parentActivityName=".FindPhoneActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />

@@ -19,14 +19,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="@color/white" >
 
     <!-- Button Area -->
     <LinearLayout
         android:id="@+id/button_ly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="28dp"
+        android:layout_margin="@dimen/padding"
         android:layout_alignParentBottom="true"
         android:orientation="vertical" >
 
@@ -72,8 +72,8 @@
             android:id="@+id/text_ly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
+            android:layout_marginLeft="@dimen/padding"
+            android:layout_marginRight="@dimen/padding"
             android:layout_alignParentBottom="true"
             android:orientation="vertical" >
 

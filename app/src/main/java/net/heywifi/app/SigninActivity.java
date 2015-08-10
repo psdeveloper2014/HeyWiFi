@@ -16,7 +16,6 @@
 
 package net.heywifi.app;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +50,7 @@ import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 public class SigninActivity extends AppCompatActivity {
 
-    static int DATABASE_VERSION = 1;
+    SharedPrefSettings pref;
 
     TextView id_err_tv, pw_err_tv;
     EditText id_et, pw_et;
@@ -74,6 +73,8 @@ public class SigninActivity extends AppCompatActivity {
         pw_err_tv = (TextView) findViewById(R.id.pw_err_tv);
         signin_btn = (Button) findViewById(R.id.signin_btn);
 
+        pref = new SharedPrefSettings(this);
+
         signin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,21 +92,10 @@ public class SigninActivity extends AppCompatActivity {
         }
     }
 
-    protected void onClose() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-            dialog = null;
-        }
-    }
-
     private void login() {
-        getData();
-        new SigninPostTask().execute();
-    }
-
-    private void getData() {
         id = id_et.getText().toString();
         pw = pw_et.getText().toString();
+        new SigninPostTask().execute();
     }
 
     private class SigninPostTask extends AsyncTask<Void, Void, Integer> {
@@ -147,8 +137,9 @@ public class SigninActivity extends AppCompatActivity {
              */
             switch (status) {
                 case 0:
-                    writeOnDB();
-                    finishActivity();
+                    pref.putUserInfo(id, pw);
+                    setResult(1);
+                    finish();
                     break;
                 case 1:
                     id_err_tv.setVisibility(View.VISIBLE);
@@ -305,16 +296,6 @@ public class SigninActivity extends AppCompatActivity {
             }
 
             return status;
-        }
-
-        private void writeOnDB() {
-            DBManager dm = new DBManager(getApplicationContext(), "data", null, DATABASE_VERSION);
-            dm.insertUserinfo(id, pw);
-        }
-
-        private void finishActivity() {
-            setResult(0);
-            finish();
         }
     }
 }

@@ -16,7 +16,6 @@
 
 package net.heywifi.app;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +50,7 @@ import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 public class SignupActivity extends AppCompatActivity {
 
-    static int DATABASE_VERSION = 1;
+    SharedPrefSettings pref;
 
     TextView id_err_tv, pw_err_tv, pw_re_err_tv, email_err_tv;
     EditText id_et, pw_et, pw_re_et, email_et;
@@ -75,6 +74,8 @@ public class SignupActivity extends AppCompatActivity {
         email_et = (EditText) findViewById(R.id.email_et);
         email_err_tv = (TextView) findViewById(R.id.email_err_tv);
         signup_btn = (Button) findViewById(R.id.signup_btn);
+
+        pref = new SharedPrefSettings(this);
 
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,8 +184,9 @@ public class SignupActivity extends AppCompatActivity {
              */
             switch (status) {
                 case 0:
-                    writeOnDB();
-                    finishActivity();
+                    pref.putPhoneInfo(id, pw);
+                    setResult(1);
+                    finish();
                     break;
                 case 1:
                     id_err_tv.setVisibility(View.VISIBLE);
@@ -269,16 +271,6 @@ public class SignupActivity extends AppCompatActivity {
             }
 
             return status;
-        }
-
-        private void writeOnDB() {
-            DBManager dm = new DBManager(getApplicationContext(), "data", null, DATABASE_VERSION);
-            dm.insertUserinfo(id, pw);
-        }
-
-        private void finishActivity() {
-            setResult(0);
-            finish();
         }
     }
 }

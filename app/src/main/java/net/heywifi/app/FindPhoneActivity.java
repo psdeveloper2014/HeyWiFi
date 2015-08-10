@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
@@ -58,9 +59,7 @@ import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 public class FindPhoneActivity extends AppCompatActivity {
 
-    DBManager dm;
-    static int DATABASE_VERSION = 1;
-
+    TextView guide_tv;
     LinearLayout find_ly;
     CheckBox ring_cb, vibrate_cb;
     Button findphone_btn;
@@ -72,6 +71,7 @@ public class FindPhoneActivity extends AppCompatActivity {
     String id, pw;
     String[] mac = new String[5];
     String[] nick = new String[5];
+    String[] gcmid = new String[5];
 
     int selectedpos = -1;
     TextView item_tv;
@@ -92,6 +92,7 @@ public class FindPhoneActivity extends AppCompatActivity {
         id = getIntent.getExtras().getString("id");
         pw = getIntent.getExtras().getString("pw");
 
+        guide_tv = (TextView) findViewById(R.id.findphone_guide_tv);
         find_ly = (LinearLayout) findViewById(R.id.findphone_find_ly);
         ring_cb = (CheckBox) findViewById(R.id.findphone_ring_cb);
         vibrate_cb = (CheckBox) findViewById(R.id.findphone_vibrate_cb);
@@ -99,8 +100,7 @@ public class FindPhoneActivity extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.findphone_lv);
         adapter = new FindPhoneListAdapter(this);
 
-        dm = new DBManager(getApplicationContext(), "data", null, DATABASE_VERSION);
-
+        find_ly.setVisibility(View.GONE);
         fillListView();
 
         ring_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -120,11 +120,9 @@ public class FindPhoneActivity extends AppCompatActivity {
         findphone_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FindPhoneActivity.this, FindingPhoneActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("pw", pw);
-                intent.putExtra("mac", mac[selectedpos]);
-                intent.putExtra("nick", nick[selectedpos]);
+                Intent intent = new Intent(FindPhoneActivity.this, FindingPhoneActivityS01.class);
+                intent.putExtra("gcmid", gcmid[selectedpos]);
+                startActivity(intent);
             }
         });
     }
@@ -180,14 +178,19 @@ public class FindPhoneActivity extends AppCompatActivity {
 
         protected void onPostExecute(Integer result) {
             adapter.clearItem();
-            for (int i=0; i<5; i++) {
-                if (!nick[i].equals("") && nick[i] != null && !nick[i].equals("null")) {
-                    adapter.addItem(new FindPhoneListItem(nick[i]));
-                } else {
-                    break;
+            try {
+                for (int i=0; i<5; i++) {
+                    if (!nick[i].equals("") && nick[i] != null && !nick[i].equals("null")) {
+                        adapter.addItem(new FindPhoneListItem(URLDecoder.decode(nick[i], "utf-8")));
+                    } else {
+                        break;
+                    }
                 }
+                lv.setAdapter(adapter);
+                guide_tv.setText(getResources().getString(R.string.findphone_guide));
+            } catch (Exception e) {
+                guide_tv.setText(getResources().getString(R.string.findphone_guide_nointernet));
             }
-            lv.setAdapter(adapter);
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -256,8 +259,6 @@ public class FindPhoneActivity extends AppCompatActivity {
 
         private void decodePhoneJson() {
             int status = -1;
-            mac = new String[5];
-            nick = new String[5];
 
             try {
                 JSONObject json = new JSONObject(response);
@@ -266,18 +267,24 @@ public class FindPhoneActivity extends AppCompatActivity {
                 if (status == 0) {
                     mac[0] = json.getString("mac1");
                     nick[0] = json.getString("nick1");
+                    gcmid[0] = json.getString("gcmid1");
                     mac[1] = json.getString("mac2");
                     nick[1] = json.getString("nick2");
+                    gcmid[1] = json.getString("gcmid2");
                     mac[2] = json.getString("mac3");
                     nick[2] = json.getString("nick3");
+                    gcmid[2] = json.getString("gcmid3");
                     mac[3] = json.getString("mac4");
                     nick[3] = json.getString("nick4");
+                    gcmid[3] = json.getString("gcmid4");
                     mac[4] = json.getString("mac5");
                     nick[4] = json.getString("nick5");
+                    gcmid[4] = json.getString("gcmid5");
                 } else {
                     for (int i=0; i<5; i++) {
                         mac[i] = "";
                         nick[i] = "";
+                        gcmid[i] = "";
                     }
                 }
             } catch (JSONException e) {
@@ -296,9 +303,15 @@ class WarningDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_findphone);
+        setContentView(R.layout.dialog_warning);
 
+        TextView dialog_title = (TextView) findViewById(R.id.dialog_title);
+        TextView dialog_text = (TextView) findViewById(R.id.dialog_text);
         Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
+
+        dialog_title.setText(getContext().getResources().getString(R.string.findphone_dialog_title));
+        dialog_text.setText(getContext().getResources().getString(R.string.findphone_dialog_text));
+
         closebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

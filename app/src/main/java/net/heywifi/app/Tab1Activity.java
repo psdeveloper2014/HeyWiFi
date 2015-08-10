@@ -16,10 +16,7 @@
 
 package net.heywifi.app;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,8 +33,7 @@ import com.skyfishjy.library.RippleBackground;
 
 public class Tab1Activity extends Fragment {
 
-    DBManager dm;
-    static int DATABASE_VERSION = 1;
+    SharedPrefSettings pref;
 
     View v;
 
@@ -47,13 +43,8 @@ public class Tab1Activity extends Fragment {
     ImageView n_ripple_iv;
     RippleBackground ripple, n_ripple;
 
-    String id;
-    String pw;
-    String[] mac = new String[5];
-    String[] nick = new String[5];
-
-    WifiManager wm;
-    WifiInfo wi;
+    String id, pw;
+    String mac, nick;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,7 +62,7 @@ public class Tab1Activity extends Fragment {
         n_ripple_iv = (ImageView) v.findViewById(R.id.n_ripple_iv);
         not_logined_rl = (RelativeLayout) v.findViewById(R.id.not_logined_rl);
 
-        dm = new DBManager(v.getContext(), "data", null, DATABASE_VERSION);
+        pref = new SharedPrefSettings(v.getContext());
 
         // Change my phone information button
         change_info_btn.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +97,7 @@ public class Tab1Activity extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), LoginActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -129,11 +120,11 @@ public class Tab1Activity extends Fragment {
     }
 
     private void loadUI() {
-        loadPhoneList();
-
-        if (dm.isUserLogined()) {
+        if (pref.isUserLogined()) {
+            loadUserInfo();
             if (isMyPhoneRegistered()) {
                 showButtons();
+                setMyNameTextView();
                 registered_rl.setVisibility(View.VISIBLE);
                 not_registered_rl.setVisibility(View.INVISIBLE);
                 not_logined_rl.setVisibility(View.INVISIBLE);
@@ -155,48 +146,16 @@ public class Tab1Activity extends Fragment {
         }
     }
 
-    private void loadPhoneList() {
-        if (dm.anythingInPhoneInfo()) {
-            loadUserInfo();
-            String data[] = dm.selectPhoneInfo(id);
-
-            mac[0] = data[0];
-            nick[0] = data[1];
-            mac[1] = data[2];
-            nick[1] = data[3];
-            mac[2] = data[4];
-            nick[2] = data[5];
-            mac[3] = data[6];
-            nick[3] = data[7];
-            mac[4] = data[8];
-            nick[4] = data[9];
-        } else {
-            for (int i=0; i<5; i++) {
-                mac[i] = "";
-                nick[i] = "";
-            }
-        }
-    }
-
-    private void loadUserInfo() {
-        String data[] = dm.selectUserinfo();
-        id = data[0];
-        pw = data[1];
-    }
-
     private boolean isMyPhoneRegistered() {
-        wm = (WifiManager) v.getContext().getSystemService(Context.WIFI_SERVICE);
-        wi = wm.getConnectionInfo();
-        String m = wi.getMacAddress().toUpperCase();
+        String[] data = pref.getPhoneInfo();
+        mac = data[0];
+        nick = data[1];
 
-        for (int i=0; i<5; i++) {
-            if (m.equals(mac[i])) {
-                setMyNameTextView(i);
-                return true;
-            }
+        if (!mac.isEmpty()) {
+            return true;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     private void showButtons() {
@@ -213,9 +172,15 @@ public class Tab1Activity extends Fragment {
         login_btn.setVisibility(View.VISIBLE);
     }
 
-    private void setMyNameTextView(int i) {
+    private void setMyNameTextView() {
         String myname = getResources().getString(R.string.my_name_header)
-                + nick[i] + getResources().getString(R.string.my_name_footer);
+                + nick + getResources().getString(R.string.my_name_footer);
         my_name_tv.setText(myname);
+    }
+
+    private void loadUserInfo() {
+        String data[] = pref.getUserInfo();
+        id = data[0];
+        pw = data[1];
     }
 }
