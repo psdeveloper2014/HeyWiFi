@@ -2,6 +2,8 @@ package net.heywifi.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -9,14 +11,15 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.Window;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -28,6 +31,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -39,8 +44,12 @@ import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 public class IntroActivity extends AppCompatActivity {
 
+    String senderId = "648637692734";
+
     public static IntroActivity aIntro;
     SharedPrefSettings pref;
+
+    CountDownLatch latch;
 
     String id, pw;
 
@@ -53,8 +62,10 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        // To close IntroActivity when MainActivity launches
         aIntro = IntroActivity.this;
         pref = new SharedPrefSettings(this);
+        latch = new CountDownLatch(2);
 
         if (pref.isFirstLaunch()) {
             // Launch welcome activity when first launch
@@ -65,8 +76,10 @@ public class IntroActivity extends AppCompatActivity {
                 Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 0);
             }
+            // If user successfully login, do two tasks at below on onActivityResult()
         } else {
             new GetPhoneInfoTask().execute();
+            new RegisterGcmTask().execute();
         }
     }
 
@@ -86,6 +99,13 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Integer result) {
+            // Wait until other task is finish
+            latch.countDown();
+            try {
+                latch.await(7, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {}
+
+            // Starting MainActivity
             Intent intent = new Intent(IntroActivity.this, MainActivity.class);
             startActivity(intent);
         }
@@ -213,8 +233,83 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
+    private class RegisterGcmTask extends AsyncTask<Void, Void, Integer> {
+
+        GoogleCloudMessaging gcm;
+
+        String regid;
+
+        protected Integer doInBackground(Void ... params) {
+            Context context = getApplicationContext();
+
+            if (isConnected()) {
+                gcm = GoogleCloudMessaging.getInstance(context);
+                regid = getRegistrationId(context);
+
+                if (regid.isEmpty()) {
+                    register();
+                }
+            }
+
+            return 0;
+        }
+
+        protected void onPostExecute(Integer result) {
+            // Wait until other task is finish
+            latch.countDown();
+            try {
+                latch.await(7, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {}
+        }
+
+        private boolean isConnected() {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            return mobile.isConnected() || wifi.isConnected();
+        }
+
+        private String getRegistrationId(Context context) {
+            String registrationId = pref.getRegId();
+            if (registrationId.isEmpty()) {
+                return "";
+            }
+
+            int registeredVersion = pref.getRegVersion();
+            int currentVersion = getAppVersion(context);
+            if (registeredVersion != currentVersion) {
+                return "";
+            }
+
+            return registrationId;
+        }
+
+        private int getAppVersion(Context context) {
+            try {
+                PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                return pi.versionCode;
+            } catch (PackageManager.NameNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private void register() {
+            try {
+                regid = gcm.register(senderId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pref.putRegId(regid);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        new GetPhoneInfoTask().execute();
+
+        if (resultCode == 1) {
+            new GetPhoneInfoTask().execute();
+            new RegisterGcmTask().execute();
+        }
     }
 }

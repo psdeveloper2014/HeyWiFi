@@ -122,6 +122,7 @@ public class Tab1Activity extends Fragment {
     private void loadUI() {
         if (pref.isUserLogined()) {
             loadUserInfo();
+
             if (isMyPhoneRegistered()) {
                 showButtons();
                 setMyNameTextView();
@@ -182,5 +183,12 @@ public class Tab1Activity extends Fragment {
         String data[] = pref.getUserInfo();
         id = data[0];
         pw = data[1];
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        // Found
+        if (resultCode == 1) {
+            // TODO: give rate
+        }
     }
 }

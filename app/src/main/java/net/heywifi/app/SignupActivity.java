@@ -184,7 +184,7 @@ public class SignupActivity extends AppCompatActivity {
              */
             switch (status) {
                 case 0:
-                    pref.putPhoneInfo(id, pw);
+                    pref.putUserInfo(id, pw);
                     setResult(1);
                     finish();
                     break;

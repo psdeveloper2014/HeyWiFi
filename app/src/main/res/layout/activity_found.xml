@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#009688">
+
+    <com.skyfishjy.library.RippleBackground
+        android:id="@+id/found_ripple"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:rb_color="#F3F3F3" >
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_found_96dp"
+            android:layout_centerInParent="true" />
+
+    </com.skyfishjy.library.RippleBackground>
+
+    <Button
+        android:id="@+id/found_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="찾았습니다"
+        android:theme="@style/ButtonColorWhite"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding" />
+
+</RelativeLayout>

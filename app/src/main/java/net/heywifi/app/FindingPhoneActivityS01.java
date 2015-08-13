@@ -28,8 +28,13 @@ import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.CircleProgress;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.security.KeyStore;
@@ -51,6 +56,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
     String gcmid;
     // 0:false, 1:true
     int ring, vibrate;
+    int message;
 
     CircleProgress progress;
     int percent;
@@ -65,8 +71,9 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
         Intent getIntent = getIntent();
         gcmid = getIntent.getStringExtra("gcmid");
-        ring = getIntent.getIntExtra("ring", 1);
+        ring = getIntent.getIntExtra("ring", 2);
         vibrate = getIntent.getIntExtra("vibrate", 1);
+        message = ring + vibrate;
 
         progress = (CircleProgress) findViewById(R.id.circle_progress);
         text01 = (TextView) findViewById(R.id.finding_text01);
@@ -78,16 +85,16 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
         found_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: finish activity
-                // result = 1 (show success dialog on MainActivity)
+                setResult(1);
+                finish();
             }
         });
 
         giveup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: finish activity
-                // result = 0 (just close all windows)
+                setResult(0);
+                finish();
             }
         });
 
@@ -101,14 +108,15 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
         });
 
         new RequestGcmTask().execute();
+    }
 
-        TimeCountThread tct = new TimeCountThread();
-        tct.start();
+    protected void onPause() {
+        super.onPause();
     }
 
     private class TimeCountThread extends Thread {
 
-        Handler timehandler;
+        TimeCountHandler timehandler;
 
         public TimeCountThread() {
             timehandler = new TimeCountHandler();
@@ -118,7 +126,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
             percent = 1;
             while (percent <= 100) {
                 try {
-                    Thread.sleep(150);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {}
 
                 timehandler.sendEmptyMessage(percent);
@@ -137,8 +145,6 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
             progress.setProgress(msg.what);
 
             if (msg.what == 100) {
-                giveup_btn.setEnabled(true);
-                nextstep_btn.setEnabled(true);
                 text01.setText(getResources().getString(R.string.finding01_found_ask));
                 text02.setVisibility(View.INVISIBLE);
             }
@@ -147,12 +153,36 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
     private class RequestGcmTask extends AsyncTask<Void, Void, Integer> {
 
+        String response;
+
         protected Integer doInBackground(Void ... params) {
+            int status;
+
             requestGcm();
-            return 0;
+            status = decodeJson();
+
+            return status;
+        }
+
+        protected void onPostExecute(Integer status) {
+            // Success
+            if (status == 1) {
+                // Start time counting
+                TimeCountThread tct = new TimeCountThread();
+                tct.start();
+                text01.setText(getResources().getString(R.string.finding01_sent));
+                text02.setText(getResources().getString(R.string.finding01_guide));
+                text02.setVisibility(View.VISIBLE);
+            } else {
+                text01.setText(getResources().getString(R.string.finding01_failed));
+                text02.setText(getResources().getString(R.string.finding01_failed_guide));
+                text02.setVisibility(View.VISIBLE);
+            }
         }
 
         private void requestGcm() {
+            response = "";
+
             try {
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 InputStream caInput = new BufferedInputStream(getResources().openRawResource(R.raw.comodo_rsaca));
@@ -177,8 +207,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
                 List nameValuePairs = new ArrayList(2);
                 nameValuePairs.add(new BasicNameValuePair("gcmid", gcmid));
-                nameValuePairs.add(new BasicNameValuePair("ring", ""+ring));
-                nameValuePairs.add(new BasicNameValuePair("vibrate", ""+vibrate));
+                nameValuePairs.add(new BasicNameValuePair("message", ""+message));
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
                 String u = "https://www.heywifi.net/db/phone/requestgcm.php";
@@ -194,10 +223,31 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
                 OutputStream post = request.getOutputStream();
                 entity.writeTo(post);
                 post.flush();
+
+                String input;
+                BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+                while ((input = in.readLine()) != null) {
+                    response += input;
+                }
+
                 post.close();
+                in.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        private int decodeJson() {
+            int status = -1;
+
+            try {
+                JSONObject json = new JSONObject(response);
+                status = json.getInt("success");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return status;
         }
     }
 }

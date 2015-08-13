@@ -16,18 +16,18 @@
 
 package net.heywifi.app;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,9 +37,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
@@ -59,19 +57,13 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
     SharedPrefSettings pref;
 
-    GcmRegister gr;
-    String gcmid;
-
     TextView phone_name_err_tv, phone_mac_tv;
     EditText phone_name_et;
     Button register_btn;
 
     LoadingDialog dialog;
 
-    String id, pw, mac, nick;
-
-    int pos;
-    String[] tmac, tnick;
+    String id, pw, mac, nick, gcmid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +79,13 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
         pref = new SharedPrefSettings(this);
 
-        gr = new GcmRegister(this);
-        gcmid = gr.register();
+        gcmid = pref.getRegId();
+        if (gcmid.isEmpty()) {
+            register_btn.setEnabled(false);
+            RegisterWarningDialog dialog = new RegisterWarningDialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.show();
+        }
 
         WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
         WifiInfo wi = wm.getConnectionInfo();
@@ -122,9 +119,6 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
     private boolean checkValid() {
         nick = phone_name_et.getText().toString();
-
-        // TODO: remove later
-        Toast.makeText(this, gcmid, Toast.LENGTH_SHORT).show();
 
         if (nick.isEmpty()) {
             phone_name_err_tv.setText(getResources().getString(R.string.register_err_empty));
@@ -261,5 +255,32 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
             return status;
         }
+    }
+}
+
+class RegisterWarningDialog extends Dialog {
+
+    public RegisterWarningDialog(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_warning);
+
+        TextView dialog_title = (TextView) findViewById(R.id.dialog_title);
+        TextView dialog_text = (TextView) findViewById(R.id.dialog_text);
+        Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
+
+        dialog_title.setText(getContext().getResources().getString(R.string.register_dialog_title));
+        dialog_text.setText(getContext().getResources().getString(R.string.register_dialog_text));
+
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 }

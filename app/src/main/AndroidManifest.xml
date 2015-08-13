@@ -26,6 +26,9 @@
     <!-- RegisterPhoneActivity - MAC address -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <!-- IntroActivity -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- GCM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -49,6 +52,14 @@
             </intent-filter>
         </receiver>
         <service android:name=".GcmIntentService" />
+
+        <!-- FoundActivity -->
+        <activity
+            android:name=".FoundActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="true"
+            android:theme="@style/IntroActivityStyle" />
 
         <!-- IntroActivity -->
         <activity

@@ -66,7 +66,7 @@ public class FindPhoneActivity extends AppCompatActivity {
     ListView lv;
     FindPhoneListAdapter adapter;
 
-    boolean ringChecked = true, vibrateChecked = true;
+    int ringChecked = 2, vibrateChecked = 1;
 
     String id, pw;
     String[] mac = new String[5];
@@ -84,7 +84,7 @@ public class FindPhoneActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        WarningDialog dialog = new WarningDialog(FindPhoneActivity.this);
+        PhoneWarningDialog dialog = new PhoneWarningDialog(FindPhoneActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.show();
 
@@ -106,14 +106,22 @@ public class FindPhoneActivity extends AppCompatActivity {
         ring_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ringChecked = isChecked;
+                if (isChecked) {
+                    ringChecked = 2;
+                } else {
+                    ringChecked = 0;
+                }
             }
         });
 
         vibrate_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                vibrateChecked = isChecked;
+                if (isChecked) {
+                    vibrateChecked = 1;
+                } else {
+                    vibrateChecked = 0;
+                }
             }
         });
 
@@ -122,7 +130,9 @@ public class FindPhoneActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FindPhoneActivity.this, FindingPhoneActivityS01.class);
                 intent.putExtra("gcmid", gcmid[selectedpos]);
-                startActivity(intent);
+                intent.putExtra("ring", ringChecked);
+                intent.putExtra("vibrate", vibrateChecked);
+                startActivityForResult(intent, 0);
             }
         });
     }
@@ -292,11 +302,25 @@ public class FindPhoneActivity extends AppCompatActivity {
             }
         }
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (resultCode) {
+            // Give up
+            case 0:
+                finish();
+                break;
+            // Found
+            case 1:
+                setResult(1);
+                finish();
+                break;
+        }
+    }
 }
 
-class WarningDialog extends Dialog {
+class PhoneWarningDialog extends Dialog {
 
-    public WarningDialog(Context context) {
+    public PhoneWarningDialog(Context context) {
         super(context);
     }
 

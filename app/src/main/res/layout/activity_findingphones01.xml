@@ -51,7 +51,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/finding01_giveup_btn"
-                    android:enabled="false"
                     android:theme="@style/ButtonColorNormal" />
 
             </LinearLayout>
@@ -66,7 +65,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/finding01_nextstep_btn"
-                    android:enabled="false"
                     android:theme="@style/ButtonColorTeal" />
 
             </LinearLayout>
@@ -98,7 +96,7 @@
                 android:id="@+id/finding_text01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/finding01_send"
+                android:text="@string/finding01_requesting"
                 android:textSize="20sp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/circle_progress"
@@ -112,6 +110,7 @@
                 android:textSize="16sp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/finding_text01"
+                android:visibility="invisible"
                 android:layout_marginTop="8dp" />
 
         </RelativeLayout>

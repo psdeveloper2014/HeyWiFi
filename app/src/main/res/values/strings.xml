@@ -48,6 +48,8 @@
     <string name="register_collecting">HeyWiFi에서 수집하는 항목\n(휴대폰을 찾을 때만 사용됩니다)</string>
     <string name="register_mac">기기의 MAC 주소</string>
     <string name="register_btn">등록하기</string>
+    <string name="register_dialog_title">등록할 수 없습니다</string>
+    <string name="register_dialog_text">앱을 종료한 후 와이파이나 데이터 네트워크에 연결된 상태로 다시 시작해주세요.\n\n계속 이러한 창이 뜨는 경우, 첫 화면의 메뉴에서 \'피드백\'을 눌러 오류를 보고해주세요.</string>
 
     <!-- Tab2Activity -->
     <string name="tab2_title">공공장소 에티켓</string>
@@ -91,7 +93,11 @@
     <string name="finding01_found_btn">찾았습니다</string>
     <string name="finding01_giveup_btn">포기하기</string>
     <string name="finding01_nextstep_btn">다음 단계로</string>
-    <string name="finding01_send">신호를 보냈습니다.</string>
-    <string name="finding01_found_ask">찾았나요?</string>
+    <string name="finding01_requesting">신호를 보내는 중입니다...</string>
+    <string name="finding01_failed">신호를 보내지 못했습니다.</string>
+    <string name="finding01_failed_guide">다음 단계로 넘어가주세요.</string>
+    <string name="finding01_sent">신호를 보냈습니다.</string>
     <string name="finding01_guide">위의 원이 가득찰 때까지 기다려보세요.</string>
+    <string name="finding01_found_ask">찾았나요?</string>
+
 </resources>

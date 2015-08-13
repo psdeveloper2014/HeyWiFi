@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == 1) {
+            setResult(1);
             finish();
         }
     }
