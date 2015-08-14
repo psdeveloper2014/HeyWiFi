@@ -38,7 +38,7 @@
     <string name="not_logined">로그인이 필요합니다.</string>
 
     <!-- RegisterPhoneActivity -->
-    <string name="registerphone_label">휴대폰 등록</string>
+    <string name="registerphone_label">휴대폰 등록하기</string>
     <string name="register_guide">이름만 정해주시면 됩니다.</string>
     <string name="register_name">휴대폰 이름</string>
     <string name="register_err_empty">이름을 정해주세요.</string>

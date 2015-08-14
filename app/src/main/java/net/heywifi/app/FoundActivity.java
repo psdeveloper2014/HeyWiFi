@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -63,6 +65,9 @@ public class FoundActivity extends AppCompatActivity {
             }
         });
 
+        FinishActivityThread fat = new FinishActivityThread();
+        fat.start();
+
         if (ring) {
             am = (AudioManager) getSystemService(AUDIO_SERVICE);
             volume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -87,6 +92,34 @@ public class FoundActivity extends AppCompatActivity {
         }
         if (vb != null) {
             vb.cancel();
+        }
+    }
+
+    private class FinishActivityThread extends Thread {
+
+        FinishActivityHandler handler;
+
+        public FinishActivityThread() {
+            handler = new FinishActivityHandler();
+        }
+
+        public void run() {
+            try {
+                // 2 min
+                Thread.sleep(120000);
+            } catch (InterruptedException e) {}
+
+            handler.sendEmptyMessage(0);
+        }
+    }
+
+    private class FinishActivityHandler extends Handler {
+
+        public FinishActivityHandler() {}
+
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            finish();
         }
     }
 }

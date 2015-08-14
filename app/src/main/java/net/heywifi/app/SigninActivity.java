@@ -138,7 +138,7 @@ public class SigninActivity extends AppCompatActivity {
             switch (status) {
                 case 0:
                     pref.putUserInfo(id, pw);
-                    setResult(1);
+                    setResult(0);
                     finish();
                     break;
                 case 1:

@@ -147,7 +147,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void generateSalt() {
-        salt = BCrypt.gensalt();
+        salt = BCrypt.gensalt(12);
     }
 
     private void hashPassword() {
@@ -185,7 +185,7 @@ public class SignupActivity extends AppCompatActivity {
             switch (status) {
                 case 0:
                     pref.putUserInfo(id, pw);
-                    setResult(1);
+                    setResult(0);
                     finish();
                     break;
                 case 1:

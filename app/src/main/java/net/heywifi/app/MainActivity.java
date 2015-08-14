@@ -64,13 +64,6 @@ public class MainActivity extends ActionBarActivity {
         tabs.setViewPager(vp);
 
         pref = new SharedPrefSettings(this);
-
-        finishIntroActivity();
-    }
-
-    private void finishIntroActivity() {
-        IntroActivity aIntro = new IntroActivity();
-        aIntro.aIntro.finish();
     }
 
     @Override

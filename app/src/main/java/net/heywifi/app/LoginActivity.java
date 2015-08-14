@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -54,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == 1) {
-            setResult(1);
+        if (resultCode == 0) {
+            setResult(0);
             finish();
         }
     }

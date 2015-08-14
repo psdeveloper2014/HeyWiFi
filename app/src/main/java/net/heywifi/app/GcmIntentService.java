@@ -40,20 +40,23 @@ public class GcmIntentService extends IntentService {
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {
-            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                decodeMessage(extras.getString("message"));
-                getDate();
+        try {
+            if (!extras.isEmpty()) {
+                if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+                    decodeMessage(extras.getString("message"));
+                    getDate();
 
-                if (reqdate == date[0] || reqdate == date[1]) {
-                    Intent mIntent = new Intent(GcmIntentService.this, FoundActivity.class);
-                    mIntent.putExtra("ring", ring);
-                    mIntent.putExtra("vibrate", vibrate);
-                    mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(mIntent);
+                    if (reqdate == date[0] || reqdate == date[1]) {
+                        Intent mIntent = new Intent(GcmIntentService.this, FoundActivity.class);
+                        mIntent.putExtra("ring", ring);
+                        mIntent.putExtra("vibrate", vibrate);
+                        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(mIntent);
+                    }
                 }
             }
-        }
+        } catch (Exception e) {}
+
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
