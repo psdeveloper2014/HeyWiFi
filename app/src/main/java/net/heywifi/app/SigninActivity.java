@@ -35,6 +35,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
@@ -138,7 +140,7 @@ public class SigninActivity extends AppCompatActivity {
             switch (status) {
                 case 0:
                     pref.putUserInfo(id, pw);
-                    setResult(0);
+                    setResult(3);
                     finish();
                     break;
                 case 1:
@@ -225,7 +227,21 @@ public class SigninActivity extends AppCompatActivity {
         }
 
         private void hashPassword() {
-            pw = BCrypt.hashpw(pw, salt);
+            for (int i=0; i<1000; i++) {
+                pw = encrypt(pw + salt);
+            }
+        }
+
+        private String encrypt(String str) {
+            try {
+                MessageDigest sh = MessageDigest.getInstance("SHA-512");
+                sh.update(str.getBytes());
+                StringBuffer sb = new StringBuffer();
+                for (byte b : sh.digest()) sb.append(Integer.toHexString(0xff & b));
+                return sb.toString();
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         private void connectGetResponse() {

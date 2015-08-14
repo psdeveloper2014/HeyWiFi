@@ -53,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == 0) {
-            setResult(0);
+        if (resultCode == 3) {
+            setResult(3);
             finish();
         }
     }

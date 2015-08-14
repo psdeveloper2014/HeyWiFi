@@ -22,15 +22,56 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class Tab2Activity extends Fragment {
+
+    TextView text_tv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_tab2, container, false);
 
+        Button regist_btn = (Button) v.findViewById(R.id.regist_btn);
+        text_tv = (TextView) v.findViewById(R.id.text_tv);
+
+        regist_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start();
+            }
+        });
+
         return v;
+    }
+
+    private void start() {
+        long start = System.currentTimeMillis();
+
+        String pw = "aasdfdfasdf";
+        for (int i=0; i<1000; i++) {
+            pw = encrypt(pw);
+        }
+
+        long end = System.currentTimeMillis();
+        text_tv.setText("실행시간:" + ((end - start) / 1000.0) + "\n" + pw);
+    }
+
+    private String encrypt(String str) {
+        try {
+            MessageDigest sh = MessageDigest.getInstance("SHA-512");
+            sh.update(str.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (byte b : sh.digest()) sb.append(Integer.toHexString(0xff & b));
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

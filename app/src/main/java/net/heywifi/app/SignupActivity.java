@@ -35,6 +35,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
@@ -52,11 +54,13 @@ public class SignupActivity extends AppCompatActivity {
 
     SharedPrefSettings pref;
 
-    TextView id_err_tv, pw_err_tv, pw_re_err_tv, email_err_tv;
+    TextView id_err_tv, pw_err_tv, pw_re_err_tv, email_tv, email_err_tv;
     EditText id_et, pw_et, pw_re_et, email_et;
     Button signup_btn;
 
     String id, pw, pw_re, salt, email;
+
+    LoadingDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class SignupActivity extends AppCompatActivity {
         pw_err_tv = (TextView) findViewById(R.id.pw_err_tv);
         pw_re_et = (EditText) findViewById(R.id.pw_re_et);
         pw_re_err_tv = (TextView) findViewById(R.id.pw_re_err_tv);
+        email_tv = (TextView) findViewById(R.id.email_tv);
         email_et = (EditText) findViewById(R.id.email_et);
         email_err_tv = (TextView) findViewById(R.id.email_err_tv);
         signup_btn = (Button) findViewById(R.id.signup_btn);
@@ -87,9 +92,8 @@ public class SignupActivity extends AppCompatActivity {
 
     private void login() {
         if (!checkValid()) return;
-        generateSalt();
-        hashPassword();
-        new SignupPostTask().execute();
+        new SignupTask().execute();
+        // new SignupRequestTask().execute();
     }
 
     private boolean checkValid() {
@@ -110,6 +114,28 @@ public class SignupActivity extends AppCompatActivity {
             valid = false;
         } else {
             id_err_tv.setVisibility(View.INVISIBLE);
+        }
+
+        try {
+            for (int i=0; i<id.length(); i++) {
+                char chr = id.charAt(i);
+                boolean lowercase = (chr >= 0x61 && chr <= 0x7A);
+                boolean number = (chr >= 0x30 && chr <= 0x39);
+
+                if (!(lowercase || number)) {
+                    id_err_tv.setVisibility(View.VISIBLE);
+                    id_err_tv.setText(getResources().getString(R.string.id_bad));
+                    valid = false;
+                    break;
+                } else {
+                    id_err_tv.setVisibility(View.INVISIBLE);
+                }
+            }
+        // Input not English or number
+        } catch (StringIndexOutOfBoundsException e) {
+            id_err_tv.setVisibility(View.VISIBLE);
+            id_err_tv.setText(getResources().getString(R.string.id_bad));
+            valid = false;
         }
 
         // Check password
@@ -136,6 +162,7 @@ public class SignupActivity extends AppCompatActivity {
 
         // Check email
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            email_tv.setText(getResources().getString(R.string.email2));
             email_err_tv.setVisibility(View.VISIBLE);
             email_err_tv.setText(getResources().getString(R.string.email_incorrect));
             valid = false;
@@ -146,24 +173,115 @@ public class SignupActivity extends AppCompatActivity {
         return valid;
     }
 
-    private void generateSalt() {
-        salt = BCrypt.gensalt(12);
-    }
-
-    private void hashPassword() {
-        pw = BCrypt.hashpw(pw, salt);
-    }
-
-    private class SignupPostTask extends AsyncTask<Void, Void, Integer> {
+    private class SignupTask extends AsyncTask<Void, Void, Integer> {
 
         String response;
-        LoadingDialog dialog;
 
         protected void onPreExecute() {
             dialog = new LoadingDialog(SignupActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
         }
+
+        protected Integer doInBackground(Void ... params) {
+
+            connectGetResponse();
+            decodeJson();
+            hashPassword();
+
+            return 0;
+        }
+
+        protected void onPostExecute(Integer status) {
+            new SignupRequestTask().execute();
+        }
+
+        private void connectGetResponse() {
+            try {
+                response = "";
+
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                InputStream caInput = new BufferedInputStream(getResources().openRawResource(R.raw.comodo_rsaca));
+                Certificate ca;
+                try {
+                    ca = cf.generateCertificate(caInput);
+                } finally {
+                    caInput.close();
+                }
+
+                String keyStoreType = KeyStore.getDefaultType();
+                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+                keyStore.load(null, null);
+                keyStore.setCertificateEntry("ca", ca);
+
+                String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+                tmf.init(keyStore);
+
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, tmf.getTrustManagers(), null);
+
+                List nameValuePairs = new ArrayList(2);
+                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+
+                String u = "https://www.heywifi.net/db/login/generatesalt.php";
+
+                URL url = new URL(u);
+                HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+
+                request.setSSLSocketFactory(sslContext.getSocketFactory());
+                request.setUseCaches(false);
+                request.setDoInput(true);
+                request.setDoOutput(true);
+                request.setRequestMethod("POST");
+                OutputStream post = request.getOutputStream();
+                entity.writeTo(post);
+                post.flush();
+
+                String input;
+                BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+                while ((input = in.readLine()) != null) {
+                    response += input;
+                }
+
+                post.close();
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void decodeJson() {
+            try {
+                JSONObject json = new JSONObject(response);
+                salt = json.getString("salt");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void hashPassword() {
+            for (int i=0; i<1000; i++) {
+                pw = encrypt(pw + salt);
+            }
+        }
+
+        private String encrypt(String str) {
+            try {
+                MessageDigest sh = MessageDigest.getInstance("SHA-512");
+                sh.update(str.getBytes());
+                StringBuffer sb = new StringBuffer();
+                for (byte b : sh.digest()) sb.append(Integer.toHexString(0xff & b));
+                return sb.toString();
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private class SignupRequestTask extends AsyncTask<Void, Void, Integer> {
+
+        String response;
 
         protected Integer doInBackground(Void ... params) {
             int status;
@@ -185,7 +303,7 @@ public class SignupActivity extends AppCompatActivity {
             switch (status) {
                 case 0:
                     pref.putUserInfo(id, pw);
-                    setResult(0);
+                    setResult(3);
                     finish();
                     break;
                 case 1:
@@ -195,6 +313,7 @@ public class SignupActivity extends AppCompatActivity {
                     break;
                 case 2:
                     id_err_tv.setVisibility(View.INVISIBLE);
+                    email_tv.setText(R.string.email2);
                     email_err_tv.setVisibility(View.VISIBLE);
                     email_err_tv.setText(getResources().getString(R.string.email_duplicated));
                     break;

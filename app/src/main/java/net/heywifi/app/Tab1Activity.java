@@ -370,10 +370,6 @@ public class Tab1Activity extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
         switch (resultCode) {
-            // Success login
-            case 0:
-                new GetPhoneInfoTask().execute();
-                break;
             // Found phone
             case 1:
                 // TODO: give rate dialog
@@ -381,6 +377,10 @@ public class Tab1Activity extends Fragment {
             // Successfully registered phone
             case 2:
                 loadUI();
+                break;
+            // Successfully login
+            case 3:
+                new GetPhoneInfoTask().execute();
                 break;
         }
 

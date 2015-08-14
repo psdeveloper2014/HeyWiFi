@@ -22,12 +22,14 @@
     <!-- MainActivity -->
     <string name="action_notlogined">로그인</string>
     <string name="action_nim">님</string>
+    <string name="action_settings">설정</string>
+    <string name="action_feedback">피드백</string>
 
     <!-- Tab1Activity -->
     <string name="tab1_title">휴대폰 찾기</string>
     <string name="my_name_header">제 이름은&#160;</string>
     <string name="my_name_footer">&#160;입니다.</string>
-    <string name="change_info_btn">나의 휴대폰 정보 수정</string>
+    <string name="change_info_btn">나의 휴대폰 관리하기</string>
     <string name="find_others_device_btn">다른 사람의 휴대폰 찾아주기</string>
     <string name="find_my_device_btn">나의 잃어버린 휴대폰 찾기</string>
     <string name="my_name_guide01">이 휴대폰을 찾으시려면,</string>
@@ -44,12 +46,13 @@
     <string name="register_err_empty">이름을 정해주세요.</string>
     <string name="register_err_toolong">이름이 너무 깁니다.</string>
     <string name="register_err_already">이미 등록된 이름입니다.</string>
+    <string name="register_err_byother">다른 계정에서 등록된 휴대폰입니다.</string>
     <string name="register_phone_ex">예) 갤럭시 S6</string>
     <string name="register_collecting">HeyWiFi에서 수집하는 항목\n(휴대폰을 찾을 때만 사용됩니다)</string>
     <string name="register_mac">기기의 MAC 주소</string>
     <string name="register_btn">등록하기</string>
-    <string name="register_dialog_title">등록할 수 없습니다</string>
-    <string name="register_dialog_text">앱을 종료한 후 와이파이나 데이터 네트워크에 연결된 상태로 다시 시작해주세요.\n\n계속 이러한 창이 뜨는 경우, 첫 화면의 메뉴에서 \'피드백\'을 눌러 오류를 보고해주세요.</string>
+    <string name="register_dialog_title">죄송합니다</string>
+    <string name="register_dialog_text">구글 플레이 스토어가 설치되어 있지 않은 휴대폰은 등록이 불가능합니다. 불편을 드려 죄송합니다.</string>
 
     <!-- Tab2Activity -->
     <string name="tab2_title">공공장소 에티켓</string>
@@ -58,13 +61,15 @@
     <string name="id">아이디</string>
     <string name="pw">비밀번호</string>
     <string name="pw_re">비밀번호 확인</string>
-    <string name="email">이메일</string>
+    <string name="email">이메일 (아이디,비밀번호를 찾을 때 사용됩니다)</string>
+    <string name="email2">이메일</string>
 
     <!-- SignupActivity -->
     <string name="signup_label">회원가입</string>
     <string name="too_short">길이가 짧습니다.</string>
     <string name="too_long">길이가 깁니다.</string>
     <string name="id_duplicated">이미 등록된 아이디입니다.</string>
+    <string name="id_bad">영어 소문자와 숫자만 사용가능합니다.</string>
     <string name="email_duplicated">이미 등록된 이메일입니다.</string>
     <string name="pw_re_incorrect">비밀번호가 일치하지 않습니다.</string>
     <string name="email_incorrect">올바른 이메일 형식이 아닙니다.</string>
@@ -80,7 +85,7 @@
     <!-- FindPhoneActivity -->
     <string name="findphone_label">휴대폰 찾기</string>
     <string name="findphone_guide">찾을 휴대폰을 선택하세요.</string>
-    <string name="findphone_guide_nointernet">인터넷 연결을 확인해보세요.</string>
+    <string name="findphone_guide_nointernet">등록된 휴대폰이 없습니다.</string>
     <string name="findphone_guide_getting">목록을 가져오는 중입니다...</string>
     <string name="do_ringing">벨소리 울리기</string>
     <string name="do_vibrating">진동 시키기</string>

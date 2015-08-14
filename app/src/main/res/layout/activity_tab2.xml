@@ -26,13 +26,7 @@
         android:id="@+id/regist_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="REGIST" />
-
-    <Button
-        android:id="@+id/unregist_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="UNREGIST" />
+        android:text="측정 시작" />
 
     <TextView
         android:id="@+id/text_tv"

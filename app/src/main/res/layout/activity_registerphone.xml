@@ -97,7 +97,8 @@
         android:layout_height="wrap_content"
         android:text="@string/register_btn"
         android:layout_alignParentBottom="true"
-        android:theme="@style/ButtonColorTeal" />
+        android:theme="@style/ButtonColorTeal"
+        android:enabled="false" />
 
     <LinearLayout
         android:id="@+id/wait_ly"

@@ -150,6 +150,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
         GoogleCloudMessaging gcm;
 
         protected Integer doInBackground(Void ... params) {
+            int result = 1;
             Context context = getApplicationContext();
 
             if (isConnected()) {
@@ -157,16 +158,24 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                 gcmid = getRegistrationId(context);
 
                 if (gcmid.isEmpty()) {
-                    register();
+                    result = register();
                 }
             }
 
-            return 0;
+            return result;
         }
 
         protected void onPostExecute(Integer result) {
-            wait_ly.setVisibility(View.INVISIBLE);
-            register_btn.setEnabled(true);
+            if (result == 0) {
+                CantRegisterDialog cdialog = new CantRegisterDialog(RegisterPhoneActivity.this);
+                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cdialog.show();
+                wait_ly.setVisibility(View.INVISIBLE);
+                register_btn.setEnabled(false);
+            } else {
+                wait_ly.setVisibility(View.INVISIBLE);
+                register_btn.setEnabled(true);
+            }
         }
 
         private boolean isConnected() {
@@ -201,13 +210,21 @@ public class RegisterPhoneActivity extends AppCompatActivity {
             }
         }
 
-        private void register() {
+        private int register() {
+            int result;
+
             try {
                 gcmid = gcm.register(senderId);
+                result = 1;
             } catch (IOException e) {
-                e.printStackTrace();
+                result = 0;
+            } catch (NullPointerException e) {
+                // Throws Exception because of not installed Google Play Store
+                result = 0;
             }
             pref.putRegId(gcmid);
+
+            return result;
         }
     }
 
@@ -251,6 +268,10 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                 case 3:
                     phone_name_err_tv.setVisibility(View.VISIBLE);
                     phone_name_err_tv.setText(R.string.register_err_already);
+                    break;
+                case 4:
+                    phone_name_err_tv.setVisibility(View.VISIBLE);
+                    phone_name_err_tv.setText(R.string.register_err_byother);
                     break;
             }
         }
@@ -327,5 +348,32 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
             return status;
         }
+    }
+}
+
+class CantRegisterDialog extends Dialog {
+
+    public CantRegisterDialog(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_warning);
+
+        TextView dialog_title = (TextView) findViewById(R.id.dialog_title);
+        TextView dialog_text = (TextView) findViewById(R.id.dialog_text);
+        Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
+
+        dialog_title.setText(R.string.register_dialog_title);
+        dialog_text.setText(R.string.register_dialog_text);
+
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 }
