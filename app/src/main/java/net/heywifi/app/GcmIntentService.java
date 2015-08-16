@@ -130,7 +130,7 @@ public class GcmIntentService extends IntentService {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, tmf.getTrustManagers(), null);
 
-            String u = "https://www.heywifi.net/db/phone/getdate.php";
+            String u = "https://www.heywifi.net/query/phone/getdate.php";
 
             URL url = new URL(u);
             HttpsURLConnection request = (HttpsURLConnection) url.openConnection();

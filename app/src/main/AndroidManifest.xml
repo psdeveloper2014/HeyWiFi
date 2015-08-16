@@ -51,7 +51,13 @@
             </intent-filter>
         </receiver>
         <service android:name=".GcmIntentService" />
-        <service android:name=".RegisterGcmService" />
+
+        <activity
+            android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.nhn.android.naverlogin.ui.OAuthLoginInAppBrowserActivity"
+            android:label="@string/naveroauth_label" />
 
         <receiver android:name=".PackageReceiver" >
             <intent-filter>
@@ -83,20 +89,6 @@
 
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
-
-        <activity
-            android:name=".SignupActivity"
-            android:label="@string/signup_label"
-            android:parentActivityName=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
-
-        <activity
-            android:name=".SigninActivity"
-            android:label="@string/signin_label"
-            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 

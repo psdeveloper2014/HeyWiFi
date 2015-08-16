@@ -78,8 +78,8 @@ public class MainActivity extends ActionBarActivity {
     private void setUserInfoMenuTitle(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_user);
         if (pref.isUserLogined()) {
-            String[] data = pref.getUserInfo();
-            item.setTitle(data[0] + getResources().getText(R.string.action_nim));
+            String name = pref.getUserName();
+            item.setTitle(name + getResources().getText(R.string.action_nim));
         } else {
             item.setVisible(false);
         }

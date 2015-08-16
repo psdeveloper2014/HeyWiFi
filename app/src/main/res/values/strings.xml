@@ -21,7 +21,7 @@
 
     <!-- MainActivity -->
     <string name="action_notlogined">로그인</string>
-    <string name="action_nim">님</string>
+    <string name="action_nim">님 반갑습니다.</string>
     <string name="action_settings">설정</string>
     <string name="action_feedback">피드백</string>
 
@@ -36,7 +36,8 @@
     <string name="my_name_guide02">1. 다른 휴대폰에 이 앱을 설치하고 찾거나,</string>
     <string name="my_name_guide03">2. heywifi.net에서 휴대폰을 찾아주세요.</string>
     <string name="n_ripple_tv01">휴대폰을 등록하세요.</string>
-    <string name="n_ripple_tv02">나중에 이 휴대폰을 찾을 수 있게 됩니다.</string>
+    <string name="n_ripple_tv02">나중에 이 휴대폰을 찾을 수 있습니다.</string>
+    <string name="register_internet">휴대폰을 등록하려면 인터넷에 연결되어 있어야 합니다.</string>
     <string name="not_logined">로그인이 필요합니다.</string>
 
     <!-- RegisterPhoneActivity -->
@@ -46,6 +47,7 @@
     <string name="register_err_empty">이름을 정해주세요.</string>
     <string name="register_err_toolong">이름이 너무 깁니다.</string>
     <string name="register_err_already">이미 등록된 이름입니다.</string>
+    <string name="register_five">5대까지만 등록가능합니다.</string>
     <string name="register_err_byother">다른 계정에서 등록된 휴대폰입니다.</string>
     <string name="register_phone_ex">예) 갤럭시 S6</string>
     <string name="register_collecting">HeyWiFi에서 수집하는 항목\n(휴대폰을 찾을 때만 사용됩니다)</string>
@@ -58,26 +60,7 @@
     <string name="tab2_title">공공장소 에티켓</string>
 
     <!-- LoginActivity -->
-    <string name="id">아이디</string>
-    <string name="pw">비밀번호</string>
-    <string name="pw_re">비밀번호 확인</string>
-    <string name="email">이메일 (아이디,비밀번호를 찾을 때 사용됩니다)</string>
-    <string name="email2">이메일</string>
-
-    <!-- SignupActivity -->
-    <string name="signup_label">회원가입</string>
-    <string name="too_short">길이가 짧습니다.</string>
-    <string name="too_long">길이가 깁니다.</string>
-    <string name="id_duplicated">이미 등록된 아이디입니다.</string>
-    <string name="id_bad">영어 소문자와 숫자만 사용가능합니다.</string>
-    <string name="email_duplicated">이미 등록된 이메일입니다.</string>
-    <string name="pw_re_incorrect">비밀번호가 일치하지 않습니다.</string>
-    <string name="email_incorrect">올바른 이메일 형식이 아닙니다.</string>
-
-    <!-- SigninActivity -->
-    <string name="signin_label">로그인</string>
-    <string name="id_notexist">일치하는 아이디가 없습니다.</string>
-    <string name="pw_notexist">일치하는 비밀번호가 없습니다.</string>
+    <string name="naveroauth_label">네이버 아이디로 로그인</string>
 
     <!-- LoadingDialog -->
     <string name="wait">잠시만 기다려주세요</string>
@@ -85,7 +68,8 @@
     <!-- FindPhoneActivity -->
     <string name="findphone_label">휴대폰 찾기</string>
     <string name="findphone_guide">찾을 휴대폰을 선택하세요.</string>
-    <string name="findphone_guide_nointernet">등록된 휴대폰이 없습니다.</string>
+    <string name="findphone_guide_nointernet">인터넷 연결을 확인해주세요.</string>
+    <string name="findphone_guide_nophone">등록된 휴대폰이 없습니다.</string>
     <string name="findphone_guide_getting">목록을 가져오는 중입니다...</string>
     <string name="do_ringing">벨소리 울리기</string>
     <string name="do_vibrating">진동 시키기</string>

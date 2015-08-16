@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
@@ -73,7 +74,8 @@ public class Tab1Activity extends Fragment {
     ImageView n_ripple_iv;
     RippleBackground ripple, n_ripple;
 
-    String id, pw;
+    int type;
+    String id;
     String mac = "", nick;
     String[] tmac = new String[5];
     String[] tnick = new String[5];
@@ -122,9 +124,9 @@ public class Tab1Activity extends Fragment {
             public void onClick(View v) {
                 getUserInfo();
                 Intent intent = new Intent(context, FindPhoneActivity.class);
+                intent.putExtra("type", type);
                 intent.putExtra("id", id);
-                intent.putExtra("pw", pw);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -141,17 +143,29 @@ public class Tab1Activity extends Fragment {
         n_ripple_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, RegisterPhoneActivity.class);
-                startActivityForResult(intent, 0);
+                if (isConnected()) {
+                    Intent intent = new Intent(context, RegisterPhoneActivity.class);
+                    startActivityForResult(intent, 0);
+                } else {
+                    Toast.makeText(context, R.string.register_internet, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         return v;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void getUserInfo() {
+        type = pref.getUserType();
+        id = pref.getUserId();
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        return mobile.isConnected() || wifi.isConnected();
     }
 
     private class GetPhoneInfoTask extends AsyncTask<Void, Void, Integer> {
@@ -182,14 +196,6 @@ public class Tab1Activity extends Fragment {
             loadUI();
         }
 
-        private boolean isConnected() {
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-            return mobile.isConnected() || wifi.isConnected();
-        }
-
         private void connectGetPhoneInfo() {
             try {
                 response = "";
@@ -216,11 +222,11 @@ public class Tab1Activity extends Fragment {
                 sslContext.init(null, tmf.getTrustManagers(), null);
 
                 List nameValuePairs = new ArrayList(2);
+                nameValuePairs.add(new BasicNameValuePair("type", "" + type));
                 nameValuePairs.add(new BasicNameValuePair("id", id));
-                nameValuePairs.add(new BasicNameValuePair("pw", pw));
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
-                String u = "https://www.heywifi.net/db/phone/getphoneinfo.php";
+                String u = "https://www.heywifi.net/query/phone/getphoneinfo.php";
 
                 URL url = new URL(u);
                 HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
@@ -252,7 +258,7 @@ public class Tab1Activity extends Fragment {
                 JSONObject json = new JSONObject(response);
                 int status = json.getInt("status");
 
-                if (status == 0) {
+                if (status == 1) {
                     tmac[0] = json.getString("mac1");
                     tnick[0] = json.getString("nick1");
                     tmac[1] = json.getString("mac2");
@@ -297,12 +303,6 @@ public class Tab1Activity extends Fragment {
                 pref.putPhoneInfo("", "");
             }
         }
-    }
-
-    private void getUserInfo() {
-        String data[] = pref.getUserInfo();
-        id = data[0];
-        pw = data[1];
     }
 
     private void loadUI() {

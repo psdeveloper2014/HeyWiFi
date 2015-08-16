@@ -210,7 +210,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("message", ""+message));
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
-                String u = "https://www.heywifi.net/db/phone/requestgcm.php";
+                String u = "https://www.heywifi.net/query/phone/requestgcm.php";
 
                 URL url = new URL(u);
                 HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
@@ -238,7 +238,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
         }
 
         private int decodeJson() {
-            int status = -1;
+            int status = 0;
 
             try {
                 JSONObject json = new JSONObject(response);

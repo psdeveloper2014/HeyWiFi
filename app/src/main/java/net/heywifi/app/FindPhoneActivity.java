@@ -19,6 +19,8 @@ package net.heywifi.app;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -68,7 +70,8 @@ public class FindPhoneActivity extends AppCompatActivity {
 
     int ringChecked = 2, vibrateChecked = 1;
 
-    String id, pw;
+    int type;
+    String id;
     String[] mac = new String[5];
     String[] nick = new String[5];
     String[] gcmid = new String[5];
@@ -89,8 +92,8 @@ public class FindPhoneActivity extends AppCompatActivity {
         dialog.show();
 
         Intent getIntent = getIntent();
+        type = getIntent.getExtras().getInt("type");
         id = getIntent.getExtras().getString("id");
-        pw = getIntent.getExtras().getString("pw");
 
         guide_tv = (TextView) findViewById(R.id.findphone_guide_tv);
         find_ly = (LinearLayout) findViewById(R.id.findphone_find_ly);
@@ -101,7 +104,11 @@ public class FindPhoneActivity extends AppCompatActivity {
         adapter = new FindPhoneListAdapter(this);
 
         find_ly.setVisibility(View.GONE);
-        fillListView();
+        if (isConnected()) {
+            fillListView();
+        } else {
+            guide_tv.setText(R.string.findphone_guide_nointernet);
+        }
 
         ring_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -135,6 +142,14 @@ public class FindPhoneActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        return mobile.isConnected() || wifi.isConnected();
     }
 
     private void fillListView() {
@@ -197,9 +212,9 @@ public class FindPhoneActivity extends AppCompatActivity {
                     }
                 }
                 lv.setAdapter(adapter);
-                guide_tv.setText(getResources().getString(R.string.findphone_guide));
+                guide_tv.setText(R.string.findphone_guide);
             } catch (Exception e) {
-                guide_tv.setText(getResources().getString(R.string.findphone_guide_nointernet));
+                guide_tv.setText(R.string.findphone_guide_nophone);
             }
 
             runOnUiThread(new Runnable() {
@@ -236,11 +251,11 @@ public class FindPhoneActivity extends AppCompatActivity {
                 sslContext.init(null, tmf.getTrustManagers(), null);
 
                 List nameValuePairs = new ArrayList(2);
+                nameValuePairs.add(new BasicNameValuePair("type", "" + type));
                 nameValuePairs.add(new BasicNameValuePair("id", id));
-                nameValuePairs.add(new BasicNameValuePair("pw", pw));
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
-                String u = "https://www.heywifi.net/db/phone/getphoneinfo.php";
+                String u = "https://www.heywifi.net/query/phone/getphoneinfo.php";
 
                 URL url = new URL(u);
                 HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
@@ -268,13 +283,13 @@ public class FindPhoneActivity extends AppCompatActivity {
         }
 
         private void decodePhoneJson() {
-            int status = -1;
+            int status;
 
             try {
                 JSONObject json = new JSONObject(response);
                 status = json.getInt("status");
 
-                if (status == 0) {
+                if (status == 1) {
                     mac[0] = json.getString("mac1");
                     nick[0] = json.getString("nick1");
                     gcmid[0] = json.getString("gcmid1");

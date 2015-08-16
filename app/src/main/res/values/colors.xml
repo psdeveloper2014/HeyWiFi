@@ -18,9 +18,11 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="gray">#828282</color>
+    <color name="gray600">#757575</color>
     <color name="colorPrimary">#00897B</color>
     <color name="colorPrimaryDark">#00695C</color>
     <color name="tabsScrollColor">#004D40</color>
     <color name="colorAccent">#ff0000</color>
-    <color name="grey600">#757575</color>
+    <color name="touch">#0c000000</color>
+    <color name="divider">#1e000000</color>
 </resources>

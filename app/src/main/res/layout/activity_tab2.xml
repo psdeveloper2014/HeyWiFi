@@ -26,11 +26,6 @@
         android:id="@+id/regist_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="측정 시작" />
-
-    <TextView
-        android:id="@+id/text_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:text="로그인" />
 
 </LinearLayout>

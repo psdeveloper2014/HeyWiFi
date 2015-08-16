@@ -26,6 +26,9 @@ public class SharedPrefSettings {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
 
+    public int NAVER_TYPE = 1;
+    public int FACEBOOK_TYPE = 2;
+
     public SharedPrefSettings(Context context) {
         c = context;
         pref = c.getSharedPreferences("settings", Context.MODE_PRIVATE);
@@ -76,28 +79,35 @@ public class SharedPrefSettings {
         }
     }
 
-    public String[] getUserInfo() {
-        String[] data = new String[2];
-        data[0] = pref.getString("id", "");
-        data[1] = pref.getString("pw", "");
-
-        return data;
+    public int getUserType() {
+        return pref.getInt("type", 0);
     }
 
-    public void putUserInfo(String id, String pw) {
+    public String getUserId() {
+        return pref.getString("id", "");
+    }
+
+    public String getUserName() {
+        return pref.getString("name", "");
+    }
+
+    public void putUserType(int type) {
+        editor.putInt("type", type);
+        editor.commit();
+    }
+
+    public void putUserId(String id) {
         editor.putString("id", id);
-        editor.putString("pw", pw);
+        editor.commit();
+    }
+
+    public void putUserName(String name) {
+        editor.putString("name", name);
         editor.commit();
     }
 
     public boolean isUserLogined() {
-        String id = pref.getString("id", "");
-
-        if (id.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return pref.getInt("type", 0) != 0;
     }
 
     public boolean isFirstLaunch() {

@@ -27,12 +27,14 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -72,7 +74,8 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
     LoadingDialog dialog;
 
-    String id, pw, mac, nick, gcmid;
+    int type;
+    String id, mac, nick, gcmid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +118,22 @@ public class RegisterPhoneActivity extends AppCompatActivity {
     }
 
     private void register() {
-        if (checkValid()) {
-            getUserInfo();
-            new RegisterPhoneTask().execute();
+        if (isConnected()) {
+            if (checkValid()) {
+                getUserInfo();
+                new RegisterPhoneTask().execute();
+            }
+        } else {
+            Toast.makeText(this, R.string.register_internet, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        return mobile.isConnected() || wifi.isConnected();
     }
 
     private boolean checkValid() {
@@ -139,9 +154,8 @@ public class RegisterPhoneActivity extends AppCompatActivity {
     }
 
     private void getUserInfo() {
-        String[] data = pref.getUserInfo();
-        id = data[0];
-        pw = data[1];
+        type = pref.getUserType();
+        id = pref.getUserId();
     }
 
     private class RegisterGcmTask extends AsyncTask<Void, Void, Integer> {
@@ -150,7 +164,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
         GoogleCloudMessaging gcm;
 
         protected Integer doInBackground(Void ... params) {
-            int result = 1;
+            int result = 0;
             Context context = getApplicationContext();
 
             if (isConnected()) {
@@ -223,6 +237,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                 result = 0;
             }
             pref.putRegId(gcmid);
+            pref.putRegVersion(getAppVersion(getApplicationContext()));
 
             return result;
         }
@@ -244,7 +259,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
             connectGetResponse();
             status = decodeJson();
 
-            if (status == 0) {
+            if (status == 1) {
                 pref.putPhoneInfo(mac, nick);
             }
 
@@ -254,24 +269,24 @@ public class RegisterPhoneActivity extends AppCompatActivity {
         protected void onPostExecute(Integer status) {
             dialog.dismiss();
 
-            /*
-             * 0:success
-             * 1:wrong id or pw (Check before launch)
-             * 2:already registered device (Check before launch)
-             * 3:already registered nickname
-             */
             switch (status) {
-                case 0:
+                case 1:
                     setResult(2);
                     finish();
                     break;
-                case 3:
+                case 11:
                     phone_name_err_tv.setVisibility(View.VISIBLE);
                     phone_name_err_tv.setText(R.string.register_err_already);
                     break;
-                case 4:
+                case 12:
+                    phone_name_err_tv.setVisibility(View.VISIBLE);
+                    phone_name_err_tv.setText(R.string.register_five);
+                    register_btn.setEnabled(false);
+                    break;
+                case 13:
                     phone_name_err_tv.setVisibility(View.VISIBLE);
                     phone_name_err_tv.setText(R.string.register_err_byother);
+                    register_btn.setEnabled(false);
                     break;
             }
         }
@@ -302,14 +317,14 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                 sslContext.init(null, tmf.getTrustManagers(), null);
 
                 List nameValuePairs = new ArrayList(2);
+                nameValuePairs.add(new BasicNameValuePair("type", "" + type));
                 nameValuePairs.add(new BasicNameValuePair("id", id));
-                nameValuePairs.add(new BasicNameValuePair("pw", pw));
                 nameValuePairs.add(new BasicNameValuePair("mac", mac));
                 nameValuePairs.add(new BasicNameValuePair("nick", URLEncoder.encode(nick, "utf-8")));
                 nameValuePairs.add(new BasicNameValuePair("gcmid", gcmid));
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
-                String u = "https://www.heywifi.net/db/phone/registerphone.php";
+                String u = "https://www.heywifi.net/query/phone/registerphone.php";
 
                 URL url = new URL(u);
                 HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
@@ -337,7 +352,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
         }
 
         private int decodeJson() {
-            int status = -1;
+            int status = 0;
 
             try {
                 JSONObject json = new JSONObject(response);
