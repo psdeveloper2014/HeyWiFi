@@ -120,4 +120,20 @@ public class SharedPrefSettings {
             return false;
         }
     }
+
+    public String getTodayHash() {
+        return pref.getString("todayhash", "");
+    }
+
+    public void putTodayHash(String hash) {
+        editor.putString("todayhash", hash);
+    }
+
+    public String getHashedDate() {
+        return pref.getString("hasheddate", "");
+    }
+
+    public void putHashedDate(String date) {
+        editor.putString("hasheddate", date);
+    }
 }

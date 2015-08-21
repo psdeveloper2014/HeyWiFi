@@ -19,6 +19,7 @@ package net.heywifi.app;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 public class PackageReceiver extends BroadcastReceiver {
@@ -30,10 +31,14 @@ public class PackageReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         pref = new SharedPrefSettings(context);
 
+        MainAlarmManager mam = new MainAlarmManager(context);
+
         switch (action) {
             case Intent.ACTION_PACKAGE_ADDED:
+                mam.set();
                 break;
             case Intent.ACTION_PACKAGE_REPLACED:
+                mam.set();
                 break;
         }
     }

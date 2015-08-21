@@ -137,8 +137,8 @@ public class FindPhoneActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FindPhoneActivity.this, FindingPhoneActivityS01.class);
                 intent.putExtra("gcmid", gcmid[selectedpos]);
-                intent.putExtra("ring", ringChecked);
-                intent.putExtra("vibrate", vibrateChecked);
+                intent.putExtra("mac", mac[selectedpos]);
+                intent.putExtra("message", ringChecked + vibrateChecked);
                 startActivityForResult(intent, 0);
             }
         });

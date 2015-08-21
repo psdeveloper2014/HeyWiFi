@@ -16,6 +16,7 @@
 
 <resources>
     <string name="app_name">HeyWiFi</string>
+    <string name="app_id">520489361431534</string>
 
     <string name="action_close">닫기</string>
 
@@ -39,6 +40,8 @@
     <string name="n_ripple_tv02">나중에 이 휴대폰을 찾을 수 있습니다.</string>
     <string name="register_internet">휴대폰을 등록하려면 인터넷에 연결되어 있어야 합니다.</string>
     <string name="not_logined">로그인이 필요합니다.</string>
+    <string name="fivedevices_dialog_title">죄송합니다</string>
+    <string name="fivedevices_dialog_text">한 계정당 휴대폰은 5개까지 등록할 수 있습니다. 안쓰는 휴대폰을 삭제하신 후 다시 시도해보세요.</string>
 
     <!-- RegisterPhoneActivity -->
     <string name="registerphone_label">휴대폰 등록하기</string>
@@ -47,7 +50,6 @@
     <string name="register_err_empty">이름을 정해주세요.</string>
     <string name="register_err_toolong">이름이 너무 깁니다.</string>
     <string name="register_err_already">이미 등록된 이름입니다.</string>
-    <string name="register_five">5대까지만 등록가능합니다.</string>
     <string name="register_err_byother">다른 계정에서 등록된 휴대폰입니다.</string>
     <string name="register_phone_ex">예) 갤럭시 S6</string>
     <string name="register_collecting">HeyWiFi에서 수집하는 항목\n(휴대폰을 찾을 때만 사용됩니다)</string>
@@ -78,7 +80,7 @@
     <string name="findphone_dialog_text">비행기 모드이거나 전원이 꺼져있는 휴대폰은 찾을 수 없으며, 그러한 경우가 아니더라도 찾아내지 못할 수도 있습니다.\n\n하지만 찾아내지 못하는 경우는 드물며, 이 앱이 찾아내지 못한다 하더라도 마음을 가다듬고 기억을 되돌려가며 찾으면 찾으실 수 있을겁니다.</string>
 
     <!-- FindingPhoneActivityS01 -->
-    <string name="finding01_label">휴대폰 찾기 (1/3)</string>
+    <string name="finding01_label">휴대폰 찾기 (1/2)</string>
     <string name="finding01_found_btn">찾았습니다</string>
     <string name="finding01_giveup_btn">포기하기</string>
     <string name="finding01_nextstep_btn">다음 단계로</string>
@@ -88,5 +90,8 @@
     <string name="finding01_sent">신호를 보냈습니다.</string>
     <string name="finding01_guide">위의 원이 가득찰 때까지 기다려보세요.</string>
     <string name="finding01_found_ask">찾았나요?</string>
+
+    <!-- FindingPhoneActivityS02 -->
+
 
 </resources>

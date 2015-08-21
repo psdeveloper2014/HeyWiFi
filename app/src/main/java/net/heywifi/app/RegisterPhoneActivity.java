@@ -27,7 +27,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -84,6 +83,9 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getUserInfo();
+        new CheckRegisteredPhoneNumberTask().execute();
+
         phone_name_err_tv = (TextView) findViewById(R.id.phone_name_err_tv);
         phone_name_et = (EditText) findViewById(R.id.phone_name_et);
         phone_mac_tv = (TextView) findViewById(R.id.phone_mac_tv);
@@ -117,10 +119,108 @@ public class RegisterPhoneActivity extends AppCompatActivity {
         }
     }
 
+    private void getUserInfo() {
+        type = pref.getUserType();
+        id = pref.getUserId();
+    }
+
+    private class CheckRegisteredPhoneNumberTask extends AsyncTask<Void, Void, Integer> {
+
+        int pos;
+        String response;
+
+        protected void onPreExecute() {
+            dialog = new LoadingDialog(RegisterPhoneActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.show();
+        }
+
+        protected Integer doInBackground(Void... params) {
+            getPos();
+            decodeJson();
+
+            return 0;
+        }
+
+        protected void onPostExecute(Integer result) {
+            dialog.dismiss();
+
+            if (pos >= 5) {
+                setResult(4);
+                finish();
+            }
+        }
+
+        private void getPos() {
+            try {
+                response = "";
+
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                InputStream caInput = new BufferedInputStream(getResources().openRawResource(R.raw.comodo_rsaca));
+                Certificate ca;
+                try {
+                    ca = cf.generateCertificate(caInput);
+                } finally {
+                    caInput.close();
+                }
+
+                String keyStoreType = KeyStore.getDefaultType();
+                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+                keyStore.load(null, null);
+                keyStore.setCertificateEntry("ca", ca);
+
+                String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+                tmf.init(keyStore);
+
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, tmf.getTrustManagers(), null);
+
+                List nameValuePairs = new ArrayList(2);
+                nameValuePairs.add(new BasicNameValuePair("type", "" + type));
+                nameValuePairs.add(new BasicNameValuePair("id", id));
+                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+
+                String u = "https://www.heywifi.net/query/phone/getpos.php";
+
+                URL url = new URL(u);
+                HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+
+                request.setSSLSocketFactory(sslContext.getSocketFactory());
+                request.setUseCaches(false);
+                request.setDoInput(true);
+                request.setDoOutput(true);
+                request.setRequestMethod("POST");
+                OutputStream post = request.getOutputStream();
+                entity.writeTo(post);
+                post.flush();
+
+                String input;
+                BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+                while ((input = in.readLine()) != null) {
+                    response += input;
+                }
+
+                post.close();
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void decodeJson() {
+            try {
+                JSONObject json = new JSONObject(response);
+                pos = json.getInt("pos");
+            } catch (JSONException e) {
+                pos = 5;
+            }
+        }
+    }
+
     private void register() {
         if (isConnected()) {
             if (checkValid()) {
-                getUserInfo();
                 new RegisterPhoneTask().execute();
             }
         } else {
@@ -153,18 +253,13 @@ public class RegisterPhoneActivity extends AppCompatActivity {
         }
     }
 
-    private void getUserInfo() {
-        type = pref.getUserType();
-        id = pref.getUserId();
-    }
-
     private class RegisterGcmTask extends AsyncTask<Void, Void, Integer> {
 
         String senderId = "648637692734";
         GoogleCloudMessaging gcm;
 
         protected Integer doInBackground(Void ... params) {
-            int result = 0;
+            int result = 1;
             Context context = getApplicationContext();
 
             if (isConnected()) {
@@ -181,7 +276,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
         protected void onPostExecute(Integer result) {
             if (result == 0) {
-                CantRegisterDialog cdialog = new CantRegisterDialog(RegisterPhoneActivity.this);
+                CantRegisterDialog cdialog = new CantRegisterDialog(RegisterPhoneActivity.this, dialog);
                 cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 cdialog.show();
                 wait_ly.setVisibility(View.INVISIBLE);
@@ -229,6 +324,8 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
             try {
                 gcmid = gcm.register(senderId);
+                pref.putRegId(gcmid);
+                pref.putRegVersion(getAppVersion(getApplicationContext()));
                 result = 1;
             } catch (IOException e) {
                 result = 0;
@@ -236,8 +333,6 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                 // Throws Exception because of not installed Google Play Store
                 result = 0;
             }
-            pref.putRegId(gcmid);
-            pref.putRegVersion(getAppVersion(getApplicationContext()));
 
             return result;
         }
@@ -279,9 +374,8 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                     phone_name_err_tv.setText(R.string.register_err_already);
                     break;
                 case 12:
-                    phone_name_err_tv.setVisibility(View.VISIBLE);
-                    phone_name_err_tv.setText(R.string.register_five);
-                    register_btn.setEnabled(false);
+                    setResult(4);
+                    finish();
                     break;
                 case 13:
                     phone_name_err_tv.setVisibility(View.VISIBLE);
@@ -368,8 +462,10 @@ public class RegisterPhoneActivity extends AppCompatActivity {
 
 class CantRegisterDialog extends Dialog {
 
-    public CantRegisterDialog(Context context) {
+    public CantRegisterDialog(Context context, LoadingDialog dialog) {
         super(context);
+        // Not to duplicate dialogs
+        dialog.dismiss();
     }
 
     @Override

@@ -1,0 +1,130 @@
+<!--
+    Copyright 2015 Park Si Hyeon
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="@dimen/padding" >
+
+    <Button
+        android:id="@+id/close_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="방법대로 했으며, 이 창을 닫겠습니다"
+        android:theme="@style/ButtonColorNormal"
+        android:layout_alignParentBottom="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/close_btn" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp" >
+
+                <ImageView
+                    android:id="@+id/search_byself_iv"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_person_black_48dp"
+                    android:layout_centerVertical="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="이번 단계는 여러분의 도움이 필요합니다."
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_toRightOf="@id/search_byself_iv"
+                    android:layout_marginLeft="12dp"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="핫스팟을 이용해 잃어버린 휴대폰을 찾는 방법입니다. 이 휴대폰으로 핫스팟을 만들고 이를 잃어버린 휴대폰이 찾는 방식입니다."
+                android:textSize="16sp"
+                android:layout_marginBottom="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="그대로 따라해주세요:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. 아래의 문자를 복사해주세요."
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/finding_ssid_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="오류가 발생했습니다."
+                android:textSize="18sp"
+                android:editable="false"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2. 핫스팟 이름으로 복사한 문자를 붙여넣고 핫스팟을 시작하세요."
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(핫스팟 이름 외에 암호 등은 설정하지 않으셔도 됩니다.)"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3. 핫스팟을 실행시킨 상태로 휴대폰을 찾아보세요."
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="잃어버린 휴대폰에서 이 앱이 5분 간격으로 주변 와이파이를 검색합니다. 이 앱이 위의 핫스팟 이름을 감지하면 전 단계에서 설정한대로 벨소리나 진동이 울립니다."/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

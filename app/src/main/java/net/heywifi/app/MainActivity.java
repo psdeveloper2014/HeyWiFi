@@ -64,6 +64,9 @@ public class MainActivity extends ActionBarActivity {
         tabs.setViewPager(vp);
 
         pref = new SharedPrefSettings(this);
+
+        MainAlarmManager mam = new MainAlarmManager(this);
+        mam.set();
     }
 
     @Override
@@ -93,6 +96,8 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.action_user:
+                break;
             case R.id.action_settings:
                 break;
             case R.id.action_feedback:

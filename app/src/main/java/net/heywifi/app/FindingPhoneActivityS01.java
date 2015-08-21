@@ -53,9 +53,7 @@ import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 public class FindingPhoneActivityS01 extends AppCompatActivity {
 
-    String gcmid;
-    // 0:false, 1:true
-    int ring, vibrate;
+    String gcmid, mac;
     int message;
 
     CircleProgress progress;
@@ -71,9 +69,8 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
         Intent getIntent = getIntent();
         gcmid = getIntent.getStringExtra("gcmid");
-        ring = getIntent.getIntExtra("ring", 2);
-        vibrate = getIntent.getIntExtra("vibrate", 1);
-        message = ring + vibrate;
+        mac = getIntent.getStringExtra("mac");
+        message = getIntent.getIntExtra("message", 3);
 
         progress = (CircleProgress) findViewById(R.id.circle_progress);
         text01 = (TextView) findViewById(R.id.finding_text01);
@@ -101,9 +98,10 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
         nextstep_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(FindingPhoneActivityS01.this, FindingPhoneActivityS02.class);
-//                intent.putExtra("gcmid", gcmid);
-//                startActivityForResult(intent);
+                Intent intent = new Intent(FindingPhoneActivityS01.this, FindingPhoneActivityS02.class);
+                intent.putExtra("mac", mac);
+                intent.putExtra("message", message);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -127,7 +125,8 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
             while (percent <= 100) {
                 try {
                     Thread.sleep(300);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
 
                 timehandler.sendEmptyMessage(percent);
                 percent++;
@@ -137,7 +136,8 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
     private class TimeCountHandler extends Handler {
 
-        public TimeCountHandler() {}
+        public TimeCountHandler() {
+        }
 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -155,7 +155,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
         String response;
 
-        protected Integer doInBackground(Void ... params) {
+        protected Integer doInBackground(Void... params) {
             int status;
 
             requestGcm();
@@ -170,12 +170,12 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
                 // Start time counting
                 TimeCountThread tct = new TimeCountThread();
                 tct.start();
-                text01.setText(getResources().getString(R.string.finding01_sent));
-                text02.setText(getResources().getString(R.string.finding01_guide));
+                text01.setText(R.string.finding01_sent);
+                text02.setText(R.string.finding01_guide);
                 text02.setVisibility(View.VISIBLE);
             } else {
-                text01.setText(getResources().getString(R.string.finding01_failed));
-                text02.setText(getResources().getString(R.string.finding01_failed_guide));
+                text01.setText(R.string.finding01_failed);
+                text02.setText(R.string.finding01_failed_guide);
                 text02.setVisibility(View.VISIBLE);
             }
         }
@@ -207,7 +207,7 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
 
                 List nameValuePairs = new ArrayList(2);
                 nameValuePairs.add(new BasicNameValuePair("gcmid", gcmid));
-                nameValuePairs.add(new BasicNameValuePair("message", ""+message));
+                nameValuePairs.add(new BasicNameValuePair("message", "" + message));
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
                 String u = "https://www.heywifi.net/query/phone/requestgcm.php";
@@ -248,6 +248,13 @@ public class FindingPhoneActivityS01 extends AppCompatActivity {
             }
 
             return status;
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == 0) {
+            setResult(0);
+            finish();
         }
     }
 }

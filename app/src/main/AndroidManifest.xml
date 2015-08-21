@@ -23,11 +23,17 @@
     <!-- IntroActivity - Check network status -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- MainService - Scanning Wifi -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <!-- RegisterPhoneActivity - MAC address -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- FoundActivity -->
     <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- BootCompleteReceiver - to start MainService -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- GCM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -42,15 +48,15 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <receiver
-            android:name=".GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="net.heywifi.app" />
-            </intent-filter>
-        </receiver>
-        <service android:name=".GcmIntentService" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
 
         <activity
             android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
@@ -58,15 +64,6 @@
         <activity
             android:name="com.nhn.android.naverlogin.ui.OAuthLoginInAppBrowserActivity"
             android:label="@string/naveroauth_label" />
-
-        <receiver android:name=".PackageReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".MainActivity"
@@ -112,6 +109,34 @@
             android:launchMode="singleTop"
             android:excludeFromRecents="true"
             android:theme="@style/IntroActivityStyle" />
+
+        <receiver
+            android:name=".GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="net.heywifi.app" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GcmIntentService" />
+
+        <receiver android:name=".PackageReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="net.heywifi.app.MainService" />
+
+        <receiver android:name="net.heywifi.app.BootCompleteReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="net.heywifi.app.MainAlarmReceiver" />
 
     </application>
 

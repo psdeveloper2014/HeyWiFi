@@ -16,6 +16,7 @@
 
 package net.heywifi.app;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -372,7 +373,9 @@ public class Tab1Activity extends Fragment {
         switch (resultCode) {
             // Found phone
             case 1:
-                // TODO: give rate dialog
+                RateDialog rdialog = new RateDialog(context);
+                rdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                rdialog.show();
                 break;
             // Successfully registered phone
             case 2:
@@ -382,7 +385,67 @@ public class Tab1Activity extends Fragment {
             case 3:
                 new GetPhoneInfoTask().execute();
                 break;
+            // Five Device Registered
+            case 4:
+                FiveDevicesDialog fdialog = new FiveDevicesDialog(context);
+                fdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                fdialog.show();
+                break;
         }
 
+    }
+}
+
+class RateDialog extends Dialog {
+
+    public RateDialog(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_warning);
+
+        TextView dialog_title = (TextView) findViewById(R.id.dialog_title);
+        TextView dialog_text = (TextView) findViewById(R.id.dialog_text);
+        Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
+
+        dialog_title.setText(R.string.fivedevices_dialog_title);
+        dialog_text.setText(R.string.fivedevices_dialog_text);
+
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+    }
+}
+
+class FiveDevicesDialog extends Dialog {
+
+    public FiveDevicesDialog(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_warning);
+
+        TextView dialog_title = (TextView) findViewById(R.id.dialog_title);
+        TextView dialog_text = (TextView) findViewById(R.id.dialog_text);
+        Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
+
+        dialog_title.setText(R.string.fivedevices_dialog_title);
+        dialog_text.setText(R.string.fivedevices_dialog_text);
+
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 }
