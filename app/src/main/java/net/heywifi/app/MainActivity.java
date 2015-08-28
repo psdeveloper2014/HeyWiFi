@@ -42,6 +42,9 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Close IntroActivity
+        IntroActivity.intro.finish();
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -82,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
         MenuItem item = menu.findItem(R.id.action_user);
         if (pref.isUserLogined()) {
             String name = pref.getUserName();
-            item.setTitle(name + getResources().getText(R.string.action_nim));
+            item.setTitle(getResources().getText(R.string.action_greet1) + name + getResources().getText(R.string.action_greet2));
         } else {
             item.setVisible(false);
         }

@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainService extends Service {
+public class MainService extends Service implements Runnable {
 
     SharedPrefSettings pref;
     WifiManager wm;
@@ -44,11 +44,11 @@ public class MainService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        run();
         return START_NOT_STICKY;
     }
 
-    private void run() {
+    @Override
+    public void run() {
         Log.i("service", "started");
 
         pref = new SharedPrefSettings(this);
@@ -106,8 +106,6 @@ public class MainService extends Service {
                 }
             } catch (StringIndexOutOfBoundsException e) {}
         }
-
-
     }
 
     private void hashPasscode() {

@@ -18,16 +18,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:padding="@dimen/padding" >
 
     <LinearLayout
-        android:id="@+id/login_ly"
+        android:id="@+id/loginbtn_ly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="@dimen/padding"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true" >
 
         <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
             android:id="@+id/naver_btn"
@@ -45,7 +45,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/login_ly" >
+        android:layout_above="@id/loginbtn_ly" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -63,8 +63,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HeyWiFi를 사용하기 위해서는"
-                android:textSize="22sp"
+                android:text="잃어버린 휴대폰이"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="2dp" />
@@ -72,18 +72,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="로그인이 필요합니다."
-                android:textSize="22sp"
+                android:text="등록된 아이디로 로그인하세요."
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="가입도 간단하며 순식간입니다."
-                android:textSize="18sp"
-                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
 

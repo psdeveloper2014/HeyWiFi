@@ -11,7 +11,7 @@ import android.util.Log;
 public class MainAlarmManager {
 
     Context context;
-    static int REQUEST_CODE = 12345;
+    static int REQUEST_CODE = 1000;
 
     public MainAlarmManager(Context context) {
         this.context = context;
@@ -22,6 +22,6 @@ public class MainAlarmManager {
         Intent intent = new Intent(context, MainAlarmReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+10000, 300000, pi);
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+10000, 480000, pi);
     }
 }

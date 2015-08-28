@@ -15,14 +15,15 @@
 -->
 
 <resources>
-    <string name="app_name">HeyWiFi</string>
+    <string name="app_name">HeyWiFi Beta</string>
     <string name="app_id">520489361431534</string>
 
     <string name="action_close">닫기</string>
 
     <!-- MainActivity -->
     <string name="action_notlogined">로그인</string>
-    <string name="action_nim">님 반갑습니다.</string>
+    <string name="action_greet1">반갑습니다,&#160;</string>
+    <string name="action_greet2">님</string>
     <string name="action_settings">설정</string>
     <string name="action_feedback">피드백</string>
 
@@ -39,9 +40,10 @@
     <string name="n_ripple_tv01">휴대폰을 등록하세요.</string>
     <string name="n_ripple_tv02">나중에 이 휴대폰을 찾을 수 있습니다.</string>
     <string name="register_internet">휴대폰을 등록하려면 인터넷에 연결되어 있어야 합니다.</string>
-    <string name="not_logined">로그인이 필요합니다.</string>
     <string name="fivedevices_dialog_title">죄송합니다</string>
     <string name="fivedevices_dialog_text">한 계정당 휴대폰은 5개까지 등록할 수 있습니다. 안쓰는 휴대폰을 삭제하신 후 다시 시도해보세요.</string>
+    <string name="congratulation_dialog_title">축하합니다</string>
+    <string name="congratulation_dialog_text">도움이 되었다니 정말 기쁘네요. 앞으로도 잘 부탁드립니다.</string>
 
     <!-- RegisterPhoneActivity -->
     <string name="registerphone_label">휴대폰 등록하기</string>
@@ -62,6 +64,7 @@
     <string name="tab2_title">공공장소 에티켓</string>
 
     <!-- LoginActivity -->
+    <string name="login_label">로그인</string>
     <string name="naveroauth_label">네이버 아이디로 로그인</string>
 
     <!-- LoadingDialog -->
@@ -92,6 +95,16 @@
     <string name="finding01_found_ask">찾았나요?</string>
 
     <!-- FindingPhoneActivityS02 -->
-
+    <string name="finding02_label">휴대폰 찾기 (2/2)</string>
+    <string name="finding02_closebtn">방법대로 했으며, 이 창을 닫겠습니다</string>
+    <string name="finding02_text01">이번 단계는 여러분의 도움이 필요합니다.</string>
+    <string name="finding02_text02">핫스팟을 이용해 잃어버린 휴대폰을 찾는 방법입니다. 이 휴대폰으로 핫스팟을 만들고 이를 잃어버린 휴대폰이 찾아내는 방식입니다.</string>
+    <string name="finding02_guide">그대로 따라해주세요:</string>
+    <string name="finding02_guide01">1. 아래의 문자를 복사해주세요.</string>
+    <string name="finding02_guide01err">오류가 발생했습니다.</string>
+    <string name="finding02_guide02">2. 핫스팟 이름으로 복사한 문자를 붙여넣고 핫스팟을 시작하세요.</string>
+    <string name="finding02_guide02help">(핫스팟 이름 외에 암호 등은 설정하지 않으셔도 됩니다.)</string>
+    <string name="finding02_guide03">3. 핫스팟을 실행시킨 상태로 휴대폰을 찾아보세요.</string>
+    <string name="finding02_guideend">잃어버린 휴대폰에서 이 앱이 약 5분 간격으로 주변 와이파이를 검색합니다. 이 앱이 위의 핫스팟 이름을 감지하면 전 단계에서 설정한대로 벨소리나 진동이 울립니다. 행운을 빕니다!</string>
 
 </resources>

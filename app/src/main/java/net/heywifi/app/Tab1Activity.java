@@ -69,8 +69,8 @@ public class Tab1Activity extends Fragment {
     SharedPrefSettings pref;
     Context context;
 
-    Button change_info_btn, find_others_device_btn, find_my_device_btn, login_btn;
-    RelativeLayout parent_rl, registered_rl, not_registered_rl, not_logined_rl;
+    Button change_info_btn, find_others_device_btn, find_my_device_btn;
+    RelativeLayout parent_rl, registered_rl, not_registered_rl;
     TextView my_name_tv;
     ImageView n_ripple_iv;
     RippleBackground ripple, n_ripple;
@@ -90,14 +90,12 @@ public class Tab1Activity extends Fragment {
         change_info_btn = (Button) v.findViewById(R.id.change_info_btn);
         find_others_device_btn = (Button) v.findViewById(R.id.find_others_device_btn);
         find_my_device_btn = (Button) v.findViewById(R.id.find_my_device_btn);
-        login_btn = (Button) v.findViewById(R.id.login_btn);
         registered_rl = (RelativeLayout) v.findViewById(R.id.registered_rl);
         my_name_tv = (TextView) v.findViewById(R.id.my_name_tv);
         ripple = (RippleBackground) v.findViewById(R.id.ripple);
         not_registered_rl = (RelativeLayout) v.findViewById(R.id.not_registered_rl);
         n_ripple = (RippleBackground) v.findViewById(R.id.n_ripple);
         n_ripple_iv = (ImageView) v.findViewById(R.id.n_ripple_iv);
-        not_logined_rl = (RelativeLayout) v.findViewById(R.id.not_logined_rl);
 
         pref = new SharedPrefSettings(context);
 
@@ -115,7 +113,8 @@ public class Tab1Activity extends Fragment {
         find_others_device_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, FindOthersActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -127,15 +126,6 @@ public class Tab1Activity extends Fragment {
                 Intent intent = new Intent(context, FindPhoneActivity.class);
                 intent.putExtra("type", type);
                 intent.putExtra("id", id);
-                startActivityForResult(intent, 0);
-            }
-        });
-
-        // Sign in, Sign up button
-        login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, LoginActivity.class);
                 startActivityForResult(intent, 0);
             }
         });
@@ -169,7 +159,7 @@ public class Tab1Activity extends Fragment {
         return mobile.isConnected() || wifi.isConnected();
     }
 
-    private class GetPhoneInfoTask extends AsyncTask<Void, Void, Integer> {
+    public class GetPhoneInfoTask extends AsyncTask<Void, Void, Integer> {
 
         String response;
 
@@ -309,30 +299,19 @@ public class Tab1Activity extends Fragment {
     private void loadUI() {
         parent_rl.setVisibility(View.VISIBLE);
 
-        if (pref.isUserLogined()) {
-            getUserInfo();
+        getUserInfo();
 
-            if (isMyPhoneRegistered()) {
-                showButtons();
-                setMyNameTextView();
-                registered_rl.setVisibility(View.VISIBLE);
-                not_registered_rl.setVisibility(View.INVISIBLE);
-                not_logined_rl.setVisibility(View.INVISIBLE);
-                ripple.startRippleAnimation();
-                n_ripple.stopRippleAnimation();
-            } else {
-                showButtons();
-                registered_rl.setVisibility(View.INVISIBLE);
-                not_registered_rl.setVisibility(View.VISIBLE);
-                not_logined_rl.setVisibility(View.INVISIBLE);
-                ripple.stopRippleAnimation();
-                n_ripple.startRippleAnimation();
-            }
-        } else {
-            goneButtons();
-            registered_rl.setVisibility(View.INVISIBLE);
+        if (isMyPhoneRegistered()) {
+            setMyNameTextView();
+            registered_rl.setVisibility(View.VISIBLE);
             not_registered_rl.setVisibility(View.INVISIBLE);
-            not_logined_rl.setVisibility(View.VISIBLE);
+            ripple.startRippleAnimation();
+            n_ripple.stopRippleAnimation();
+        } else {
+            registered_rl.setVisibility(View.INVISIBLE);
+            not_registered_rl.setVisibility(View.VISIBLE);
+            ripple.stopRippleAnimation();
+            n_ripple.startRippleAnimation();
         }
     }
 
@@ -348,20 +327,6 @@ public class Tab1Activity extends Fragment {
         }
     }
 
-    private void showButtons() {
-        change_info_btn.setVisibility(View.VISIBLE);
-        find_others_device_btn.setVisibility(View.VISIBLE);
-        find_my_device_btn.setVisibility(View.VISIBLE);
-        login_btn.setVisibility(View.GONE);
-    }
-
-    private void goneButtons() {
-        change_info_btn.setVisibility(View.GONE);
-        find_others_device_btn.setVisibility(View.VISIBLE);
-        find_my_device_btn.setVisibility(View.GONE);
-        login_btn.setVisibility(View.VISIBLE);
-    }
-
     private void setMyNameTextView() {
         String myname = getResources().getString(R.string.my_name_header)
                 + nick + getResources().getString(R.string.my_name_footer);
@@ -373,9 +338,9 @@ public class Tab1Activity extends Fragment {
         switch (resultCode) {
             // Found phone
             case 1:
-                RateDialog rdialog = new RateDialog(context);
-                rdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                rdialog.show();
+                CongratulationDialog cdialog = new CongratulationDialog(context);
+                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cdialog.show();
                 break;
             // Successfully registered phone
             case 2:
@@ -383,7 +348,7 @@ public class Tab1Activity extends Fragment {
                 break;
             // Successfully login
             case 3:
-                new GetPhoneInfoTask().execute();
+                // Moved to IntroActivity
                 break;
             // Five Device Registered
             case 4:
@@ -396,9 +361,9 @@ public class Tab1Activity extends Fragment {
     }
 }
 
-class RateDialog extends Dialog {
+class CongratulationDialog extends Dialog {
 
-    public RateDialog(Context context) {
+    public CongratulationDialog(Context context) {
         super(context);
     }
 
@@ -411,8 +376,8 @@ class RateDialog extends Dialog {
         TextView dialog_text = (TextView) findViewById(R.id.dialog_text);
         Button closebtn = (Button) findViewById(R.id.dialog_closebtn);
 
-        dialog_title.setText(R.string.fivedevices_dialog_title);
-        dialog_text.setText(R.string.fivedevices_dialog_text);
+        dialog_title.setText(R.string.congratulation_dialog_title);
+        dialog_text.setText(R.string.congratulation_dialog_text);
 
         closebtn.setOnClickListener(new View.OnClickListener() {
             @Override

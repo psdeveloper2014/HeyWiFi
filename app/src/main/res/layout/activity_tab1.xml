@@ -53,13 +53,6 @@
             android:text="@string/find_my_device_btn"
             android:theme="@style/ButtonColorTeal" />
 
-        <Button
-            android:id="@+id/login_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="로그인 / 회원가입"
-            android:theme="@style/ButtonColorTeal" />
-
     </LinearLayout>
 
     <!-- Shows when user's phone is registered -->
@@ -183,36 +176,6 @@
                 android:layout_centerHorizontal="true" />
 
         </com.skyfishjy.library.RippleBackground>
-
-    </RelativeLayout>
-
-    <!-- Shows when user doesn't logined -->
-    <RelativeLayout
-        android:id="@+id/not_logined_rl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/button_ly" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical" >
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_account_circle_grey_48dp"
-                android:layout_gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/not_logined"
-                android:textSize="20sp"
-                android:layout_marginTop="18dp" />
-
-        </LinearLayout>
 
     </RelativeLayout>
 

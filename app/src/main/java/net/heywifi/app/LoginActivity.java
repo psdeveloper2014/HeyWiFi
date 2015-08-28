@@ -28,6 +28,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.nhn.android.naverlogin.OAuthLogin;
@@ -75,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
-
         setContentView(R.layout.activity_login);
 
         context = LoginActivity.this;
@@ -248,10 +248,14 @@ public class LoginActivity extends AppCompatActivity {
             pref.putUserType(pref.NAVER_TYPE);
             pref.putUserId(id);
             pref.putUserName(name);
+
+            // Don't need to keep login state
+            // Also, for FindOthersActivity
+            mOAuthLogin.logout(context);
         }
 
         protected void onPostExecute(Integer result) {
-            setResult(3);
+            setResult(1);
             finish();
         }
     }
@@ -329,10 +333,14 @@ public class LoginActivity extends AppCompatActivity {
             pref.putUserType(pref.FACEBOOK_TYPE);
             pref.putUserId(fid);
             pref.putUserName(fname);
+
+            // Don't need to keep login state
+            // Also, for FindOthersActivity
+            LoginManager.getInstance().logOut();
         }
 
         protected void onPostExecute(Integer result) {
-            setResult(3);
+            setResult(1);
             finish();
         }
     }

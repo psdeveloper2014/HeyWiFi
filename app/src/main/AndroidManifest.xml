@@ -20,19 +20,19 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- IntroActivity - Check network status -->
+    <!-- Check network status -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- MainService - Scanning Wifi -->
+    <!-- Scanning Wifi -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <!-- RegisterPhoneActivity - MAC address -->
+    <!-- Get MAC address -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- FoundActivity -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- BootCompleteReceiver - to start MainService -->
+    <!-- BootCompleteReceiver - to start service -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- GCM -->
@@ -66,16 +66,28 @@
             android:label="@string/naveroauth_label" />
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:name=".IntroActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:theme="@style/MainActivityStyle" >
+            android:theme="@style/IntroActivityStyle" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/MainActivityStyle" />
+
+        <activity
+            android:name=".WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/IntroActivityStyle" />
 
         <activity
             android:name=".RegisterPhoneActivity"
@@ -86,6 +98,7 @@
 
         <activity
             android:name=".LoginActivity"
+            android:label="@string/login_label"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 
@@ -100,6 +113,13 @@
             android:name=".FindingPhoneActivityS01"
             android:label="@string/finding01_label"
             android:parentActivityName=".FindPhoneActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".FindingPhoneActivityS02"
+            android:label="@string/finding02_label"
+            android:parentActivityName=".FindingPhoneActivityS01"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 
