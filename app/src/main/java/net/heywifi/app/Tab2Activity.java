@@ -16,14 +16,13 @@
 
 package net.heywifi.app;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 
 public class Tab2Activity extends Fragment {
@@ -31,6 +30,11 @@ public class Tab2Activity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_tab2, container, false);
+
+        SharedPrefSettings pref = new SharedPrefSettings(v.getContext());
+        TextView showinfo = (TextView) v.findViewById(R.id.showinfo_tv);
+        showinfo.setText(pref.getInfo());
+
         return v;
     }
 }

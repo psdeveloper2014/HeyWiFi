@@ -39,28 +39,17 @@ import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLDecoder;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 
@@ -70,36 +59,40 @@ public class Tab1Activity extends Fragment {
     Context context;
 
     Button change_info_btn, find_others_device_btn, find_my_device_btn;
-    RelativeLayout parent_rl, registered_rl, not_registered_rl;
-    TextView my_name_tv;
+    RelativeLayout registered_rl, not_registered_rl;
+    TextView my_name_tv, name_below_tv;
     ImageView n_ripple_iv;
-    RippleBackground ripple, n_ripple;
+    RippleBackground n_ripple;
 
-    int type;
-    String id;
-    String mac = "", nick;
-    String[] tmac = new String[5];
-    String[] tnick = new String[5];
+    String mac;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_tab1, container, false);
         context = v.getContext();
 
-        parent_rl = (RelativeLayout) v.findViewById(R.id.parent_rl);
         change_info_btn = (Button) v.findViewById(R.id.change_info_btn);
         find_others_device_btn = (Button) v.findViewById(R.id.find_others_device_btn);
         find_my_device_btn = (Button) v.findViewById(R.id.find_my_device_btn);
         registered_rl = (RelativeLayout) v.findViewById(R.id.registered_rl);
         my_name_tv = (TextView) v.findViewById(R.id.my_name_tv);
-        ripple = (RippleBackground) v.findViewById(R.id.ripple);
+        name_below_tv = (TextView) v.findViewById(R.id.name_below_tv);
         not_registered_rl = (RelativeLayout) v.findViewById(R.id.not_registered_rl);
         n_ripple = (RippleBackground) v.findViewById(R.id.n_ripple);
         n_ripple_iv = (ImageView) v.findViewById(R.id.n_ripple_iv);
 
         pref = new SharedPrefSettings(context);
 
-        new GetPhoneInfoTask().execute();
+        WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wi = wm.getConnectionInfo();
+        mac = wi.getMacAddress().toUpperCase();
+
+        if (isConnected()) {
+            new GetPhoneInfoTask().execute();
+            // GetPhoneInfoTask calls loadUI()
+        } else {
+            loadUI();
+        }
 
         // Change my phone information button
         change_info_btn.setOnClickListener(new View.OnClickListener() {
@@ -122,10 +115,9 @@ public class Tab1Activity extends Fragment {
         find_my_device_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getUserInfo();
                 Intent intent = new Intent(context, FindPhoneActivity.class);
-                intent.putExtra("type", type);
-                intent.putExtra("id", id);
+                intent.putExtra("type", pref.getUserType());
+                intent.putExtra("id", pref.getUserId());
                 startActivityForResult(intent, 0);
             }
         });
@@ -146,11 +138,6 @@ public class Tab1Activity extends Fragment {
         return v;
     }
 
-    private void getUserInfo() {
-        type = pref.getUserType();
-        id = pref.getUserId();
-    }
-
     private boolean isConnected() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -159,10 +146,9 @@ public class Tab1Activity extends Fragment {
         return mobile.isConnected() || wifi.isConnected();
     }
 
-    public class GetPhoneInfoTask extends AsyncTask<Void, Void, Integer> {
+    private class GetPhoneInfoTask extends AsyncTask<Void, Void, Integer> {
 
         String response;
-
         LoadingDialog dialog;
 
         protected void onPreExecute() {
@@ -172,12 +158,8 @@ public class Tab1Activity extends Fragment {
         }
 
         protected Integer doInBackground(Void... params) {
-            if (isConnected()) {
-                getUserInfo();
-                connectGetPhoneInfo();
-                decodeJson();
-                checkThisPhoneRegistered();
-            }
+            connectGetPhoneInfo();
+            decodeJson();
 
             return 0;
         }
@@ -191,54 +173,17 @@ public class Tab1Activity extends Fragment {
             try {
                 response = "";
 
-                CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                InputStream caInput = new BufferedInputStream(context.getResources().openRawResource(R.raw.comodo_rsaca));
-                Certificate ca;
-                try {
-                    ca = cf.generateCertificate(caInput);
-                } finally {
-                    caInput.close();
-                }
-
-                String keyStoreType = KeyStore.getDefaultType();
-                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-                keyStore.load(null, null);
-                keyStore.setCertificateEntry("ca", ca);
-
-                String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-                TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-                tmf.init(keyStore);
-
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, tmf.getTrustManagers(), null);
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost("http://slave.heywifi.net/query/phone/checkregistered.php");
 
                 List nameValuePairs = new ArrayList(2);
-                nameValuePairs.add(new BasicNameValuePair("type", "" + type));
-                nameValuePairs.add(new BasicNameValuePair("id", id));
-                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+                nameValuePairs.add(new BasicNameValuePair("type", "" + pref.getUserType()));
+                nameValuePairs.add(new BasicNameValuePair("id", pref.getUserId()));
+                nameValuePairs.add(new BasicNameValuePair("mac", mac));
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-                String u = "https://www.heywifi.net/query/phone/getphoneinfo.php";
-
-                URL url = new URL(u);
-                HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
-
-                request.setSSLSocketFactory(sslContext.getSocketFactory());
-                request.setUseCaches(false);
-                request.setDoInput(true);
-                request.setDoOutput(true);
-                request.setRequestMethod("POST");
-                OutputStream post = request.getOutputStream();
-                entity.writeTo(post);
-                post.flush();
-
-                String input;
-                BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-                while ((input = in.readLine()) != null) {
-                    response += input;
-                }
-
-                post.close();
-                in.close();
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                response = httpResponse.toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -250,67 +195,31 @@ public class Tab1Activity extends Fragment {
                 int status = json.getInt("status");
 
                 if (status == 1) {
-                    tmac[0] = json.getString("mac1");
-                    tnick[0] = json.getString("nick1");
-                    tmac[1] = json.getString("mac2");
-                    tnick[1] = json.getString("nick2");
-                    tmac[2] = json.getString("mac3");
-                    tnick[2] = json.getString("nick3");
-                    tmac[3] = json.getString("mac4");
-                    tnick[3] = json.getString("nick4");
-                    tmac[4] = json.getString("mac5");
-                    tnick[4] = json.getString("nick5");
+                    String nick = json.getString("nick");
+                    pref.putPhoneInfo(mac, URLDecoder.decode(nick, "utf-8"));
                 } else {
-                    for (int i=0; i<5; i++) {
-                        tmac[i] = "";
-                        tnick[i] = "";
-                    }
+                    pref.putPhoneInfo("", "");
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void checkThisPhoneRegistered() {
-            WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wi = wm.getConnectionInfo();
-            String devicemac = wi.getMacAddress().toUpperCase();
-
-            for (int i=0; i<5; i++) {
-                if (devicemac.equals(tmac[i])) {
-                    mac = tmac[i];
-                    try {
-                        nick = URLDecoder.decode(tnick[i], "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-
-                    pref.putPhoneInfo(mac, nick);
-                }
-            }
-
-            // This phone was deleted on MySQL DB
-            if (mac.isEmpty()) {
-                pref.putPhoneInfo("", "");
-            }
+            } catch (Exception e) {}
         }
     }
 
     private void loadUI() {
-        parent_rl.setVisibility(View.VISIBLE);
-
-        getUserInfo();
-
         if (isMyPhoneRegistered()) {
-            setMyNameTextView();
+            String[] data = pref.getPhoneInfo();
+            my_name_tv.setText(data[1]);
             registered_rl.setVisibility(View.VISIBLE);
             not_registered_rl.setVisibility(View.INVISIBLE);
-            ripple.startRippleAnimation();
             n_ripple.stopRippleAnimation();
+
+            if (isConnected()) {
+                name_below_tv.setText(R.string.namebelow_registered);
+            } else {
+                name_below_tv.setText(R.string.namebelow_failed);
+            }
         } else {
             registered_rl.setVisibility(View.INVISIBLE);
             not_registered_rl.setVisibility(View.VISIBLE);
-            ripple.stopRippleAnimation();
             n_ripple.startRippleAnimation();
         }
     }
@@ -318,19 +227,8 @@ public class Tab1Activity extends Fragment {
     private boolean isMyPhoneRegistered() {
         String[] data = pref.getPhoneInfo();
         mac = data[0];
-        nick = data[1];
 
-        if (!mac.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void setMyNameTextView() {
-        String myname = getResources().getString(R.string.my_name_header)
-                + nick + getResources().getString(R.string.my_name_footer);
-        my_name_tv.setText(myname);
+        return !mac.isEmpty();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

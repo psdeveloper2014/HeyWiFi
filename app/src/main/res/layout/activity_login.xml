@@ -57,32 +57,24 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@drawable/ic_key_black_48dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HeyWiFi를 사용하기 위해서는"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="2dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="로그인이 필요합니다."
-                android:textSize="22sp"
-                android:textColor="@color/black"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="가입도 간단하며 순식간입니다."
-                android:textSize="18sp"
+                android:text="HeyWiFi를 사용하려면"
+                android:textSize="22sp"
+                android:textColor="@color/gray600"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="로그인이 필요합니다."
+                android:textSize="22sp"
+                android:textColor="@color/gray600"
                 android:layout_gravity="center_horizontal" />
 
         </LinearLayout>

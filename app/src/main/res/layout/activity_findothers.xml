@@ -51,32 +51,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_centerInParent="true" >
+            android:layout_centerInParent="true"
+            android:paddingTop="8dp" >
 
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@drawable/ic_key_black_48dp"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="잃어버린 휴대폰이"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="2dp" />
+                android:textSize="22sp"
+                android:textColor="@color/gray600"
+                android:layout_gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="등록된 아이디로 로그인하세요."
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="8dp" />
+                android:textSize="22sp"
+                android:textColor="@color/gray600"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
 

@@ -25,19 +25,10 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 
 
 public class GcmIntentService extends IntentService {
@@ -109,48 +100,11 @@ public class GcmIntentService extends IntentService {
     private void getDate() {
         String response = "";
         try {
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = new BufferedInputStream(getResources().openRawResource(R.raw.comodo_rsaca));
-            Certificate ca;
-            try {
-                ca = cf.generateCertificate(caInput);
-            } finally {
-                caInput.close();
-            }
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost("http://slave.heywifi.net/query/phone/getdate.php");
 
-            String keyStoreType = KeyStore.getDefaultType();
-            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-            keyStore.load(null, null);
-            keyStore.setCertificateEntry("ca", ca);
-
-            String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-            tmf.init(keyStore);
-
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, tmf.getTrustManagers(), null);
-
-            String u = "https://www.heywifi.net/query/phone/getdate.php";
-
-            URL url = new URL(u);
-            HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
-
-            request.setSSLSocketFactory(sslContext.getSocketFactory());
-            request.setUseCaches(false);
-            request.setDoInput(true);
-            request.setDoOutput(true);
-            request.setRequestMethod("POST");
-            OutputStream post = request.getOutputStream();
-            post.flush();
-
-            String input;
-            BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            while ((input = in.readLine()) != null) {
-                response += input;
-            }
-
-            post.close();
-            in.close();
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            response = httpResponse.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }

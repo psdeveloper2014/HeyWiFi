@@ -17,11 +17,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parent_rl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:visibility="invisible" >
+    android:background="@color/white" >
 
     <!-- Button Area -->
     <LinearLayout
@@ -76,10 +74,17 @@
                 android:id="@+id/my_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="26sp"
                 android:textColor="@android:color/black"
-                android:layout_marginBottom="16dp" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/name_below_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/gray"
+                android:layout_marginBottom="28dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,24 +108,6 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
-
-        <!-- Ripple Animation -->
-        <com.skyfishjy.library.RippleBackground
-            android:id="@+id/ripple"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/text_ly"
-            app:rb_color="#B2DFDB"
-            app:rb_radius="16dp"
-            app:rb_rippleAmount="1" >
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_check_circle_ripple_48dp"
-                android:layout_centerInParent="true" />
-
-        </com.skyfishjy.library.RippleBackground>
 
     </RelativeLayout>
 

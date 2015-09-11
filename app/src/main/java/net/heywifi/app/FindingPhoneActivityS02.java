@@ -65,7 +65,7 @@ public class FindingPhoneActivityS02 extends AppCompatActivity {
         close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(0);
+                setResult(-1);
                 finish();
             }
         });

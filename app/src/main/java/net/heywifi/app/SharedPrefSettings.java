@@ -69,16 +69,6 @@ public class SharedPrefSettings {
         editor.commit();
     }
 
-    public boolean anythingPhoneInfo() {
-        String mac = pref.getString("mac", "");
-
-        if (mac.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public int getUserType() {
         return pref.getInt("type", 0);
     }
@@ -115,6 +105,7 @@ public class SharedPrefSettings {
 
         if (boo) {
             editor.putBoolean("firstlaunch", false);
+            editor.commit();
             return true;
         } else {
             return false;
@@ -127,6 +118,7 @@ public class SharedPrefSettings {
 
     public void putTodayHash(String hash) {
         editor.putString("todayhash", hash);
+        editor.commit();
     }
 
     public String getHashedDate() {
@@ -135,5 +127,16 @@ public class SharedPrefSettings {
 
     public void putHashedDate(String date) {
         editor.putString("hasheddate", date);
+        editor.commit();
+    }
+
+    // TODO: Remove Later
+    public String getInfo() {
+        return pref.getString("info", "");
+    }
+
+    public void putInfo(String info) {
+        editor.putString("info", info);
+        editor.commit();
     }
 }

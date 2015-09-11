@@ -38,24 +38,15 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
 import java.net.URLDecoder;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 
@@ -229,54 +220,16 @@ public class FindPhoneActivity extends AppCompatActivity {
             try {
                 response = "";
 
-                CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                InputStream caInput = new BufferedInputStream(getResources().openRawResource(R.raw.comodo_rsaca));
-                Certificate ca;
-                try {
-                    ca = cf.generateCertificate(caInput);
-                } finally {
-                    caInput.close();
-                }
-
-                String keyStoreType = KeyStore.getDefaultType();
-                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-                keyStore.load(null, null);
-                keyStore.setCertificateEntry("ca", ca);
-
-                String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-                TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-                tmf.init(keyStore);
-
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, tmf.getTrustManagers(), null);
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost("http://slave.heywifi.net/query/phone/getphoneinfo.php");
 
                 List nameValuePairs = new ArrayList(2);
                 nameValuePairs.add(new BasicNameValuePair("type", "" + type));
                 nameValuePairs.add(new BasicNameValuePair("id", id));
-                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-                String u = "https://www.heywifi.net/query/phone/getphoneinfo.php";
-
-                URL url = new URL(u);
-                HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
-
-                request.setSSLSocketFactory(sslContext.getSocketFactory());
-                request.setUseCaches(false);
-                request.setDoInput(true);
-                request.setDoOutput(true);
-                request.setRequestMethod("POST");
-                OutputStream post = request.getOutputStream();
-                entity.writeTo(post);
-                post.flush();
-
-                String input;
-                BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-                while ((input = in.readLine()) != null) {
-                    response += input;
-                }
-
-                post.close();
-                in.close();
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                response = httpResponse.toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -321,7 +274,8 @@ public class FindPhoneActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch (resultCode) {
             // Give up
-            case 0:
+            case -1:
+                setResult(-1);
                 finish();
                 break;
             // Found

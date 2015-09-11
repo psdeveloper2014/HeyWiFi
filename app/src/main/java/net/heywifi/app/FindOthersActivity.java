@@ -40,26 +40,7 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.StringReader;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-
-import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
-import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 
 public class FindOthersActivity extends AppCompatActivity {
@@ -76,7 +57,7 @@ public class FindOthersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_findothers);
 
         context = FindOthersActivity.this;
         pref = new SharedPrefSettings(context);
@@ -208,7 +189,7 @@ public class FindOthersActivity extends AppCompatActivity {
 
         switch (resultCode) {
             // Give up
-            case 0:
+            case -1:
                 finish();
                 break;
             // Found

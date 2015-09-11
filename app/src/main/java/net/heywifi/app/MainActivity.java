@@ -23,6 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -44,6 +47,10 @@ public class MainActivity extends ActionBarActivity {
 
         // Close IntroActivity
         IntroActivity.intro.finish();
+
+        AdView adv = (AdView) findViewById(R.id.ad);
+        AdRequest adr = new AdRequest.Builder().build();
+        adv.loadAd(adr);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

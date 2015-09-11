@@ -32,10 +32,13 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainService extends Service implements Runnable {
+public class MainService extends Service {
 
     SharedPrefSettings pref;
     WifiManager wm;
+
+    Date d;
+    String date;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,10 +47,11 @@ public class MainService extends Service implements Runnable {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("service", "onStartCommand");
+        run();
         return START_NOT_STICKY;
     }
 
-    @Override
     public void run() {
         Log.i("service", "started");
 
@@ -60,8 +64,8 @@ public class MainService extends Service implements Runnable {
             Thread.sleep(7000);
         } catch (InterruptedException e) {}
 
-        Date d = new Date();
-        String date = new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(d);
+        d = new Date();
+        date = new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(d);
 
         if (!date.equals(pref.getHashedDate())) {
             hashPasscode();
@@ -113,8 +117,6 @@ public class MainService extends Service implements Runnable {
             WifiInfo wi = wm.getConnectionInfo();
             String mac = wi.getMacAddress().toUpperCase();
 
-            Date d = new Date();
-            String date = new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(d);
             String str = mac + date + "hailey";
 
             MessageDigest md = MessageDigest.getInstance("MD5");
