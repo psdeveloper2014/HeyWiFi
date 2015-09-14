@@ -148,7 +148,7 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                 response = "";
 
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://slave.heywifi.net/query/phone/registerphone.php");
+                HttpPost httpPost = new HttpPost("http://slave.heywifi.net/query/phone/getpos.php");
 
                 List nameValuePairs = new ArrayList(2);
                 nameValuePairs.add(new BasicNameValuePair("type", "" + type));

@@ -129,14 +129,4 @@ public class SharedPrefSettings {
         editor.putString("hasheddate", date);
         editor.commit();
     }
-
-    // TODO: Remove Later
-    public String getInfo() {
-        return pref.getString("info", "");
-    }
-
-    public void putInfo(String info) {
-        editor.putString("info", info);
-        editor.commit();
-    }
 }

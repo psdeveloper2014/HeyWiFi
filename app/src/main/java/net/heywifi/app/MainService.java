@@ -22,7 +22,6 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,13 +46,11 @@ public class MainService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("service", "onStartCommand");
         run();
         return START_NOT_STICKY;
     }
 
     public void run() {
-        Log.i("service", "started");
 
         pref = new SharedPrefSettings(this);
 
@@ -76,6 +73,7 @@ public class MainService extends Service {
         // 0123456789                 27
         List<ScanResult> scanResults = wm.getScanResults();
         for (ScanResult result : scanResults) {
+            // Find Phone using Tethering
             try {
                 String passcode = result.SSID.substring(9, 27);
                 if (passcode.equals(hash)) {

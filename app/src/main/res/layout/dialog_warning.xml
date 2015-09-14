@@ -56,7 +56,7 @@
 
         <Button
             android:id="@+id/dialog_closebtn"
-            android:layout_width="@dimen/padding_dialog_close"
+            android:layout_width="@dimen/padding_close"
             android:layout_height="wrap_content"
             android:text="@string/action_close"
             android:textColor="@color/colorPrimary"

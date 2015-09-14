@@ -20,6 +20,8 @@
     <string name="ad_unit_id">ca-app-pub-2855465464343651/9242284922</string>
 
     <string name="action_close">닫기</string>
+    <string name="action_save">저장</string>
+    <string name="action_delete">삭제</string>
 
     <!-- MainActivity -->
     <string name="action_notlogined">로그인</string>
@@ -111,5 +113,13 @@
 
     <!-- FindOthersActivity -->
     <string name="findothers_label">다른 계정으로 로그인</string>
+
+    <!-- ManagePhoneActivity -->
+    <string name="managephone_label">휴대폰 관리</string>
+    <string name="dialog_deletetitle">휴대폰 삭제</string>
+    <string name="dialog_deletetext">(을)를 삭제합니다. 다시 등록하기 전까지는 이 휴대폰을 찾을 수 없게 됩니다.</string>
+    <string name="manage_guide">관리할 휴대폰을 선택하세요.</string>
+    <string name="dialog_renametitle">휴대폰 이름 수정</string>
+    <string name="dialog_renametext">의 이름을 수정합니다.</string>
 
 </resources>

@@ -1,17 +1,33 @@
-<LinearLayout
+<!--
+    Copyright 2015 Park Si Hyeon
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white" >
 
     <RelativeLayout
+        android:id="@+id/guide_rl"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginLeft="@dimen/padding" >
 
         <TextView
-            android:id="@+id/manage_guide"
+            android:id="@+id/guide_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/findphone_guide_getting"
@@ -23,7 +39,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_below="@id/guide_rl" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,6 +48,7 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/item01_rl"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginLeft="@dimen/padding"
@@ -40,7 +58,6 @@
                     android:id="@+id/nick01_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LG Gx2"
                     android:textSize="24sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -48,17 +65,19 @@
 
                 <ImageView
                     android:id="@+id/nick01_delete"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_delete_black_24dp"
+                    android:padding="2dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true" />
 
                 <ImageView
                     android:id="@+id/nick01_edit"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_edit_gray_24dp"
+                    android:padding="2dp"
                     android:layout_marginRight="12dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/nick01_delete" />
@@ -66,6 +85,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/item02_rl"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginLeft="@dimen/padding"
@@ -75,7 +95,6 @@
                     android:id="@+id/nick02_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LG Gx2"
                     android:textSize="24sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -83,25 +102,27 @@
 
                 <ImageView
                     android:id="@+id/nick02_delete"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_delete_black_24dp"
+                    android:padding="2dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true" />
 
                 <ImageView
                     android:id="@+id/nick02_edit"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_edit_gray_24dp"
+                    android:padding="2dp"
                     android:layout_marginRight="12dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/nick02_delete" />
 
             </RelativeLayout>
 
-
             <RelativeLayout
+                android:id="@+id/item03_rl"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginLeft="@dimen/padding"
@@ -111,7 +132,6 @@
                     android:id="@+id/nick03_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LG Gx2"
                     android:textSize="24sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -119,20 +139,96 @@
 
                 <ImageView
                     android:id="@+id/nick03_delete"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_delete_black_24dp"
+                    android:padding="2dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true" />
 
                 <ImageView
                     android:id="@+id/nick03_edit"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_edit_gray_24dp"
+                    android:padding="2dp"
                     android:layout_marginRight="12dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/nick03_delete" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/item04_rl"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginLeft="@dimen/padding"
+                android:layout_marginRight="@dimen/padding" >
+
+                <TextView
+                    android:id="@+id/nick04_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true" />
+
+                <ImageView
+                    android:id="@+id/nick04_delete"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_delete_black_24dp"
+                    android:padding="2dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true" />
+
+                <ImageView
+                    android:id="@+id/nick04_edit"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_edit_gray_24dp"
+                    android:padding="2dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/nick04_delete" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/item05_rl"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginLeft="@dimen/padding"
+                android:layout_marginRight="@dimen/padding" >
+
+                <TextView
+                    android:id="@+id/nick05_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true" />
+
+                <ImageView
+                    android:id="@+id/nick05_delete"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_delete_black_24dp"
+                    android:padding="2dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true" />
+
+                <ImageView
+                    android:id="@+id/nick05_edit"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_edit_gray_24dp"
+                    android:padding="2dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/nick05_delete" />
 
             </RelativeLayout>
 
@@ -140,4 +236,4 @@
 
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>
